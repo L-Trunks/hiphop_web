@@ -4,8 +4,8 @@ const url = '/search'
 /**
  * 获取视频结果
  */
-export const GetVideoResultList = () => {
-    return get(url+'/get_video_result_list')
+export const GetVideoResultList = (params) => {
+    return get(url+'/get_video_result_list',params)
 }
 
 /**
