@@ -35,3 +35,10 @@ export const DeleteVideo = (params) => {
 export const AddVideo = (params) => {
     return post(url+'/add_video',params)
 }
+
+/**
+ * 视频浏览量加1
+ */
+export const addVideoLook = (params) => {
+    return post(url+'/add_video_look',params)
+}

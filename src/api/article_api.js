@@ -42,3 +42,10 @@ export const DeleteArticle = (params) => {
 export const AddArticle = (params) => {
     return post(url+'/add_article',params)
 }
+
+/**
+ * 文章浏览量加1
+ */
+export const addArticleLook = (params) => {
+    return post(url+'/add_article_look',params)
+}
