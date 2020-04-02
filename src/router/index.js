@@ -21,10 +21,10 @@ const routes = [
         path:'/login',
         component:Login
       },
-      // {
-      //   path:'/register',
-      //   component:Register
-      // },
+      {
+        path:'/register',
+        component:Register
+      },
       {
         path:'/person',
         component:Register

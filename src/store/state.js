@@ -12,6 +12,7 @@ const state = {
     rotationImgList:null,
     videoResult:null,
     articleResult:null,
-    
+    token:null,
+    isLogin:null
 }
 export default state;

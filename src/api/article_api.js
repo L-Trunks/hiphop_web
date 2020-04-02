@@ -4,8 +4,8 @@ const url = '/article'
 /**
  * 获取所有文章
  */
-export const GetAllArticleList = () => {
-    return get(url+'/get_all_article_list')
+export const GetAllArticleList = (params) => {
+    return get(url+'/get_all_article_list',params)
 }
 
 /**

@@ -23,17 +23,15 @@
         </div>
         <div class="top_right">
           <router-link to="/person">
-            <el-button v-if="i" type="info" icon="el-icon-user-solid" class size="small">个人中心</el-button>
+            <el-button v-if="isLogin" type="info" icon="el-icon-user-solid" class size="small">个人中心</el-button>
           </router-link>
-          <router-link to="/addArticle">
-            <el-button style="margin-left:10px" v-if="i" type="danger" icon="el-icon-circle-plus-outline" class size="small">发帖</el-button>
-          </router-link>
+            <el-button style="margin-left:10px" v-if="isLogin" @click="logout" type="danger" icon="el-icon-delete" class size="small">退出登录</el-button>
           <router-link to="/login">
-            <el-button v-if="!i" type="info" icon="el-icon-user" class size="small">登录</el-button>
+            <el-button v-if="!isLogin" type="info" icon="el-icon-user" class size="small">登录</el-button>
           </router-link>
           <router-link to="/register">
             <el-button
-            v-if="!i"
+            v-if="!isLogin"
               style="margin-left:10px"
               type="primary"
               icon="el-icon-more-outline"
@@ -51,6 +49,7 @@
 
 <script>
 import {GetVideoResultList,GetArticleResultList} from '../api/search_api'
+import {GetUserInfoByToken} from '../api/user_api'
 import {PageConfig} from '../utils/tools'
 import Hfooter from '../components/Hfooter'
 import {mapState,mapMutations,mapActions} from 'vuex'
@@ -61,19 +60,35 @@ export default {
       searchWord: "",
       logoUrl: "../images/logo.png",
       PageConfig,
-      i:false
     };
   },
   created(){
+    let accessToken = localStorage.getItem("accessToken") || "";
+    if (accessToken) {
+      this.changeToken(accessToken);
+      GetUserInfoByToken({ accessToken: accessToken }).then(res => {
+        if (res && res.code === '200') {
+          console.log(res);
+          this.changeIsLogin(true);
+          this.changeUserId(res.data._id);
+          this.changeUserInfo(res.data[0]);
+        } else {
+        }
+      });
+    }
     this.GetAllDanceSortList()
-    this.GetAllVideoList(...PageConfig)
-    this.GetAllArticleList(...PageConfig)
+    this.GetAllVideoList(PageConfig)
+    this.GetAllArticleList(PageConfig)
     this.GetAllRotationImgList()
   },
   methods:{
         ...mapMutations([
       "changeVideoResult",
       "changeArticleResult",
+      'changeToken',
+      'changeIsLogin',
+      'changeUserId',
+      'changeUserInfo'
     ]),
     ...mapActions([
       "GetAllDanceSortList",
@@ -100,10 +115,18 @@ export default {
         })
       }
       this.$router.push("/search");
+    },
+    logout(){
+      localStorage.setItem("accessToken", "");
+      this.changeIsLogin(false);
+      this.changeUserInfo({});
+      this.changeUserId("");
+      this.$router.push("/");
     }
   },
     computed: {
     ...mapState({
+      isLogin: state => state.isLogin,
       userid: state => state.userid,
       userInfo: state => state.userInfo,
       danceSortList: state => state.danceSortList,

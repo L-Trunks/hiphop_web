@@ -47,6 +47,12 @@ const mutations = {
     },
     changeArticleResult(state, params) {
         state.articleResult = params;
-    }
+    },
+    changeToken(state, params) {
+        state.token = params;
+    },
+    changeIsLogin(state, params) {
+        state.isLogin = params;
+    },
 }
 export default mutations

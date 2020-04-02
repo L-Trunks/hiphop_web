@@ -19,7 +19,7 @@ const actions = {
             context.commit('changeUserInfo', res.data);
         }).catch(err => {
             console.log(err)
-            Vue.$message.error(err.message && err.message || '服务器跑丢了')
+            
         })
     },
 
@@ -30,7 +30,6 @@ const actions = {
             context.commit('changeDanceSortList', res.data);
         }).catch(err => {
             console.log(err)
-            Vue.$message.error(err.message && err.message || '服务器跑丢了')
         })
     },
 
@@ -41,7 +40,7 @@ const actions = {
             context.commit('changeNewArticleList', res.data);
         }).catch(err => {
             console.log(err)
-            Vue.$message.error(err.message && err.message || '服务器跑丢了')
+            
         })
     },
     //更新最新视频列表
@@ -51,7 +50,7 @@ const actions = {
             context.commit('changeNewVideoList', res.data);
         }).catch(err => {
             console.log(err)
-            Vue.$message.error(err.message && err.message || '服务器跑丢了')
+            
         })
     },
     //更新消息列表
@@ -61,7 +60,7 @@ const actions = {
             context.commit('changeMessageList', res.data);
         }).catch(err => {
             console.log(err)
-            Vue.$message.error(err.message && err.message || '服务器跑丢了')
+            
         })
     },
     //更新收藏视频列表
@@ -71,7 +70,7 @@ const actions = {
             context.commit('changeVideoCollectList', res.data);
         }).catch(err => {
             console.log(err)
-            Vue.$message.error(err.message && err.message || '服务器跑丢了')
+            
         })
     },
     //更新收藏文章列表
@@ -81,7 +80,7 @@ const actions = {
             context.commit('changeArticleCollectList', res.data);
         }).catch(err => {
             console.log(err)
-            Vue.$message.error(err.message && err.message || '服务器跑丢了')
+            
         })
     },
     //更新轮播图列表
@@ -91,7 +90,7 @@ const actions = {
             context.commit('changeRotationImgList', res.data);
         }).catch(err => {
             console.log(err)
-            Vue.$message.error(err.message && err.message || '服务器跑丢了')
+            
         })
     },
 }
