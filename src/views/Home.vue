@@ -73,6 +73,9 @@ export default {
           this.changeUserId(res.data._id);
           this.changeUserInfo(res.data[0]);
         } else {
+          if(res.code=='1005'){
+            this.$message.error('token失效，请重新登录')
+          }
         }
       });
     }

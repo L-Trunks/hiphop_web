@@ -45,14 +45,14 @@
               placeholder="请再次输入密码"
             ></el-input>
           </el-form-item>
-          <!-- <el-form-item prop="birthday">
-            <el-input
-              type="password"
+          <el-form-item prop="birthday">
+            <el-date-picker
+              type="date"
+              placeholder="请选择生日"
               v-model="registerForm.birthday"
-              auto-complete="off"
-              placeholder="请再次输入密码"
-            ></el-input>
-          </el-form-item>-->
+              style="width: 100%;"
+            ></el-date-picker>
+          </el-form-item>
           <el-form-item prop="mail">
             <el-input
               type="text"
@@ -93,6 +93,7 @@ import {
   VerifyNickName,
   Register
 } from "../api/user_api";
+import { dateTimeStamp } from "../utils/util";
 import { mapState, mapMutations, mapActions } from "vuex";
 export default {
   name: "Register",
@@ -135,7 +136,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["changeUserId", "changeUserInfo", "changeToken"]),
+    ...mapMutations(["changeUserId", "changeUserInfo", "changeToken",'changeIsLogin']),
     userRegister(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -163,6 +164,7 @@ export default {
                       console.log(3);
                       this.registerForm = {
                         ...this.registerForm,
+                        birthday: dateTimeStamp(this.registerForm.birthday),
                         permission: "0"
                       };
                       console.log(this.registerForm);
