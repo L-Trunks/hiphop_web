@@ -46,6 +46,6 @@ export const AddArticle = (params) => {
 /**
  * 文章浏览量加1
  */
-export const addArticleLook = (params) => {
+export const AddArticleLook = (params) => {
     return post(url+'/add_article_look',params)
 }

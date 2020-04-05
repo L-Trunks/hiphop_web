@@ -16,6 +16,13 @@ export const GetVideoListByUser = (params) => {
 }
 
 /**
+ * 根据id获取视频信息
+ */
+export const GetVideoInfoById = (params) => {
+    return get(url+'/get_video_info_by_id',params)
+}
+
+/**
  * 修改视频信息
  */
 export const UpdateVideo = (params) => {
@@ -39,6 +46,6 @@ export const AddVideo = (params) => {
 /**
  * 视频浏览量加1
  */
-export const addVideoLook = (params) => {
+export const AddVideoLook = (params) => {
     return post(url+'/add_video_look',params)
 }

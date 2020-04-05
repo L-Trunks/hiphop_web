@@ -24,7 +24,8 @@
                 <time class="time">
                   {{ item.createtime }}
                   <br />
-                  发布者：{{ item.nickname }}
+                  发布者：{{ item.nickname }}<br />
+                  分类:{{item.sortname}}
                 </time>
               </div>
             </div>

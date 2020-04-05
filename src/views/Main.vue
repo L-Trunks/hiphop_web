@@ -2,7 +2,7 @@
   <div class>
     <el-row class>
       <el-col class :span="16" :offset="4">
-        <el-carousel height="450px" class="img_card">
+        <el-carousel :loading="imgLoading" height="450px" class="img_card">
           <el-carousel-item v-for="(item,index) in imgList" :key="index">
             <img
               title="点击查看详情"
@@ -11,11 +11,12 @@
               height="500px"
               alt
               srcset
+              @click="goRotationImgDetail(item)"
             />
             <div class="img_title">{{ item && item.imgtitle ||'' }}</div>
           </el-carousel-item>
         </el-carousel>
-        <div class="sort_card">
+        <div :loading="sortLoading" class="sort_card">
           <el-card
             @click.native="goListBySort(item)"
             class="sort"
@@ -24,7 +25,13 @@
             shadow="hover"
           >{{item.sortname}}</el-card>
         </div>
-        <content-list style="margin-top:35px" :type="'article'" :title="articleTitle" :list="articleList"></content-list>
+        <content-list
+          :loading="articleLoading"
+          style="margin-top:35px"
+          :type="'article'"
+          :title="articleTitle"
+          :list="articleList"
+        ></content-list>
         <el-pagination
           style="margin:15px"
           background
@@ -36,7 +43,13 @@
           layout="total,sizes, prev, pager, next"
           :total="PageConfig.total"
         ></el-pagination>
-        <content-list style="margin-top:50px" :type="'video'" :title="videoTitle" :list="videoList"></content-list>
+        <content-list
+          :loading="videoLoading"
+          style="margin-top:50px"
+          :type="'video'"
+          :title="videoTitle"
+          :list="videoList"
+        ></content-list>
         <el-pagination
           style="margin:15px"
           background
@@ -70,6 +83,9 @@ export default {
     return {
       sortList: [],
       imgLoading: false,
+      articleLoading: false,
+      videoLoading: false,
+      sortLoading: false,
       videoTitle: "视频区",
       articleTitle: "资讯&文章区",
       articleList: [],
@@ -110,6 +126,13 @@ export default {
         query: { sortid: data._id, sortname: data.sortname }
       });
     },
+    goRotationImgDetail(data) {
+      console.log(data);
+      this.$router.push({
+        path: "/rotation_img_detail",
+        query: { imgid: data._id }
+      });
+    },
     //设置轮播图列表
     setImgList() {
       this.imgLoading = true;
@@ -119,11 +142,14 @@ export default {
     },
     //设置分类
     setSortList() {
+      this.sortLoading = true;
       this.sortList = this.danceSortList || [];
       console.log(this.sortList);
+      this.sortLoading = true;
     },
     //格式化文章列表
     formatArticleList() {
+      this.articleLoading = true;
       let list = (this.newArticleList && this.newArticleList.data) || [];
       this.PageConfig.total =
         (this.newArticleList && this.newArticleList.total) || 0;
@@ -133,15 +159,17 @@ export default {
           getFirstPic(i.article) ||
           "http://localhost:8888/public/images/noimage.jpg";
         i.createtime = formatDateTime(dateTimeStamp(i.createtime));
-        i.nickname = i.articleUser[0]&& i.articleUser[0].nickname || "";
+        i.nickname = (i.articleUser[0] && i.articleUser[0].nickname) || "";
         i.sortname = i.articleSort[0].sortname || "";
         this.articleList.push(i);
       });
       console.log(this.articleList);
+      this.articleLoading = false;
     },
     //格式化视频列表
     formatVideoList() {
-      let list = this.newVideoList && this.newVideoList.data || [];
+      this.videoLoading = true;
+      let list = (this.newVideoList && this.newVideoList.data) || [];
       this.VideoPageConfig.total =
         (this.newVideoList && this.newVideoList.total) || 0;
       this.videoList = [];
@@ -151,8 +179,9 @@ export default {
         i.nickname = i.videoUser[0].nickname || "";
         i.createtime = formatDateTime(dateTimeStamp(i.createtime));
         i.sortname = i.videoSort[0].sortname || "";
-        this.videoList.push(i)
+        this.videoList.push(i);
       });
+      this.videoLoading = true;
     },
     handleSizeChange(val) {
       let PageConfig = {

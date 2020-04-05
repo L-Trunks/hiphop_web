@@ -7,6 +7,9 @@ import Register from '../components/Reister.vue';
 import ListBySort from '../components/ListBySort.vue';
 import ArticleDetail from '../components/ArticleDetail.vue';
 import VideoDetail from '../components/VideoDetail.vue';
+import RotationImgDetail from '../components/RotationImgDetail.vue';
+import UserPerson from '../components/UserPerson.vue';
+import AddArticle from '../components/AddArticle.vue';
 
 Vue.use(VueRouter)
 
@@ -30,11 +33,11 @@ const routes = [
       },
       {
         path: '/person',
-        component: Register
+        component: UserPerson
       },
       {
         path: '/addArticle',
-        component: Register
+        component: AddArticle
       },
       {
         path: '/list_by_sort',
@@ -47,6 +50,10 @@ const routes = [
       {
         path: '/video_detail',
         component: VideoDetail
+      },
+      {
+        path:'rotation_img_detail',
+        component:RotationImgDetail
       }
     ]
   }

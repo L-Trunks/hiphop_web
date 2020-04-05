@@ -5,18 +5,15 @@
 </template>
 
 <script>
-
 export default {
-  name: 'app',
-  components: {
-    
-  }
-}
+  name: "app",
+  components: {}
+};
 </script>
 
 <style>
-#app{
-  font-family: 'Courier New', Courier, monospace
+#app {
+  font-family: "Courier New", Courier, monospace;
 }
 .router-link {
   text-decoration: none;
@@ -27,10 +24,13 @@ export default {
 a {
   text-decoration: none;
 }
-.el-pagination{
-  text-align: center
+.el-pagination {
+  text-align: center;
 }
-.el-carousel button{
-background: #000
+.el-carousel button {
+  background: #000;
+}
+.baberrage-stage {
+  height: 400px !important;
 }
 </style>

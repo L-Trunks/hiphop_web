@@ -4,16 +4,19 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 import md5 from 'js-md5';
+import { vueBaberrage } from 'vue-baberrage'
+Vue.use(vueBaberrage)
 Vue.prototype.$md5 = md5;
 Vue.config.productionTip = false
 
 Vue.config.productionTip = false
 
-const whiteList = ['/','/login','/register','/list_by_sort','/article_detail','/video_detail']// 免登录白名单
+const whiteList = ['/','/login','/register','/list_by_sort','/article_detail','/video_detail','/rotation_img_detail']// 免登录白名单
 
 router.beforeEach((to, from, next) => {
-  console.log(store.state)
-  if (store.state.token) {
+  let accessToken = localStorage.getItem("accessToken") || "";
+  console.log(accessToken)
+  if (accessToken) {
     next()
   } else {
     /* has no token*/

@@ -8,13 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "core-js": "^3.6.4",
     "element-ui": "^2.4.5",
     "js-md5": "^0.7.3",
     "vue": "^2.6.11",
+    "vue-aliplayer": "0.0.8",
+    "vue-baberrage": "^3.2.4",
     "vue-router": "^3.1.5",
-    "vuex": "^3.1.2",
-    "axios": "^0.19.0"
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",

@@ -2,6 +2,14 @@
   <div>
     <el-row class>
       <el-col class="article" :span="12" :offset="4">
+        <el-breadcrumb
+          style="margin-top:20px;margin-left:10px"
+          separator-class="el-icon-arrow-right"
+        >
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/' }">资讯&文章区</el-breadcrumb-item>
+          <el-breadcrumb-item>文章详情</el-breadcrumb-item>
+        </el-breadcrumb>
         <div class="article_header">
           <h1>{{articleInfo.title}}</h1>
           <div class="article_info_user">
@@ -17,7 +25,7 @@
               <i class="el-icon-chat-dot-square"></i>
               评论数:{{articleInfo.commentscount}}
               <i class="el-icon-star-on"></i>
-              收藏数:{{articleInfo.collectscount}}
+              浏览量:{{articleInfo.lookscount}}
               <i class="el-icon-thumb"></i>
               点赞数:{{articleInfo.goodscount}}
             </div>
@@ -35,17 +43,82 @@
           </el-tooltip>
         </div>
         <div class="comment">
-          <div class="comment_header">评论</div>
+          <div v-loading="loading" class="comment_header">评论</div>
           <div class="top_model_top">
             <el-input style="width:50%" placeholder="请输入内容" v-model="commentInfo">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            <el-button type="primary" @click="addComment" class="search_btn" size="big">发表</el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-position"
+              @click="addComment"
+              class="search_btn"
+              size="big"
+            >发表</el-button>
           </div>
-          <div class="comment_info">
-            <div>
-              <div></div>
-              <p></p>
+          <div>
+            <div class="comment_box" v-for="(item,index) in firstCommentList">
+              <div class="user_comment">
+                <el-avatar
+                  :src="item.fromUser[0].imgurl || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
+                ></el-avatar>
+                {{item.fromUser[0].nickname}} &nbsp;
+                <span
+                  style="font-size:12px;#999;margin-left:10px"
+                >{{item.createtime}}</span>
+              </div>
+              <div class="comment_info">
+                <p style="color:#4d4d4d;font-size:14px">{{item.commentinfo}}</p>
+                <div>
+                  <el-button
+                    type="info"
+                    class="no_btn"
+                    size="mini"
+                    @click="showComment(item,index)"
+                  >查看回复({{item.childList && item.childList.length||0}})</el-button>
+                  <el-button
+                    type="primary"
+                    class="no_btn"
+                    @click="showAddComment(index)"
+                    icon="el-icon-chat-dot-square"
+                    size="mini"
+                  >回复</el-button>
+                </div>
+              </div>
+              <div
+                v-if="item.showChild"
+                style="padding:0 20px"
+                class="comment_box"
+                v-for="(itemchild,indexchild) in item.childList"
+              >
+                <div class="user_comment">
+                  <el-avatar
+                    :src="itemchild.fromUser[0].imgurl || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
+                  ></el-avatar>
+                  <span style="font-size:14px">
+                    {{itemchild.fromUser[0].nickname}} &nbsp;
+                    <span
+                      style="font-size:12px;#999;margin-left:10px"
+                    >{{itemchild.createtime}}</span>
+                  </span>
+                </div>
+                <div class="comment_info">
+                  <p style="color:#4d4d4d;font-size:12px">{{itemchild.commentinfo}}</p>
+                </div>
+              </div>
+              <div v-if="item.addShow" class="top_model_top">
+                <el-input style="width:50%;" placeholder="请输入回复内容" v-model="secondCommentInfo">
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+                <el-button
+                  slot="reference"
+                  type="primary"
+                  icon="el-icon-position"
+                  class="search_btn"
+                  size="big"
+                  @click="addSecondComment(item,index)"
+                >发表</el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -88,7 +161,11 @@
 </template>
 
 <script>
-import { GetArticleListByUser, GetArticleInfoById } from "../api/article_api";
+import {
+  GetArticleListByUser,
+  GetArticleInfoById,
+  AddArticleLook
+} from "../api/article_api";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { dateTimeStamp, formatDateTime, getFirstPic } from "../utils/util";
 import {
@@ -98,37 +175,97 @@ import {
   ArticleAddCollect,
   ArticleRemoveCollect,
   ArticleAddComments,
-  ArticleSelectComments
+  ArticleSelectComments,
+  SelectSecondComments,
+  AddSecondComments,
+  GetCounts
 } from "../api/article_info_api";
 import { PageConfig } from "../utils/tools";
 export default {
   name: "ArticleDetail",
   data() {
     return {
+      loading: false,
       articleid: "",
       articleList: [],
       articleInfo: {},
       PageConfig,
-      commentInfo: ""
+      commentInfo: "",
+      secondCommentInfo: "",
+      firstCommentList: [],
+      secondCommentList: []
     };
   },
   created() {
     this.articleid = this.$route.query.articleid;
   },
   mounted() {
-    this.getArticleInfo();
+    this.getArticleInfo("look");
     this.formatArticleList();
     this.getCommentsList();
+    this.addArticleLook();
   },
   methods: {
-    //
-    addComment() {
+    //浏览量加一
+    addArticleLook() {
+      console.log(this.articleInfo.lookscount);
+      if (this.articleInfo.lookscount) {
+        AddArticleLook({
+          _id: this.articleid,
+          lookscount: +this.articleInfo.lookscount
+        })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
+    //更新点赞收藏评论数
+    getCounts() {
+      GetCounts({ articleid: this.articleid })
+        .then(res => {
+          console.log(res);
+          if (res) {
+            this.getArticleInfo();
+          } else {
+            this.getCounts();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    showAddComment(index) {
+      this.loading = true;
+      this.firstCommentList.map((i, j) => {
+        i.addShow = false;
+        if (j == index) {
+          i.addShow = true;
+        }
+      });
+      this.secondCommentInfo = "";
+      this.loading = false;
+    },
+    showComment(data, index) {
+      this.loading = true;
+      this.firstCommentList.map((i, j) => {
+        i.showChild = false;
+        if (j == index) {
+          i.showChild = true;
+        }
+      });
+      this.secondCommentInfo = "";
+      this.loading = false;
+    },
+    addComment(data) {
       if (this.commentInfo === "") {
         this.$message.error("请输入评论");
         return;
       }
       ArticleAddComments({
-        articleid:this.articleid,
+        articleid: this.articleid,
         from: this.userid,
         to: this.articleInfo.userid,
         commentinfo: this.commentInfo,
@@ -137,6 +274,31 @@ export default {
       })
         .then(res => {
           console.log(res);
+          this.commentInfo = "";
+          this.getCommentsList();
+          this.getCounts();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    addSecondComment(data, index) {
+      if (this.secondCommentInfo === "") {
+        this.$message.error("请输入评论");
+        return;
+      }
+      AddSecondComments({
+        articleid: this.articleid,
+        from: this.userid,
+        to: this.articleInfo.userid,
+        commentinfo: this.secondCommentInfo,
+        parentid: data._id
+      })
+        .then(res => {
+          console.log(res);
+          this.secondCommentInfo = "";
+          this.firstCommentList[index].addShow = false;
+          this.getCommentsList();
         })
         .catch(err => {
           console.log(err);
@@ -151,19 +313,78 @@ export default {
       })
         .then(res => {
           console.log(res);
+          if (res) {
+            this.firstCommentList = (res && res.data.data) || [];
+            SelectSecondComments({
+              articleid: this.articleid
+            })
+              .then(res => {
+                console.log(res);
+                this.secondCommentList = (res && res.data) || [];
+                this.formatComment();
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          } else {
+            this.getCommentsList();
+          }
         })
         .catch(err => {
           console.log(err);
         });
     },
-    getArticleInfo() {
+    //格式化评论列表
+    formatComment() {
+      this.loading = true;
+      this.firstCommentList &&
+        this.firstCommentList.map(i => {
+          i.childList = [];
+          i.addShow = false;
+          i.showChild = false;
+          let timestamp = new Date();
+          let time = timestamp.getTime() - dateTimeStamp(i.createtime);
+          if (time < 3600000) {
+            i.createtime = Math.round(time / 1000 / 60) + "分钟前";
+          } else if (time >= 3600000 && time < 86400000) {
+            i.createtime = Math.round(time / 1000 / 60 / 60) + "小时前";
+          } else if (time >= 86400000) {
+            i.createtime = Math.round(time / 1000 / 60 / 60 / 24) + "天前";
+          }
+          this.secondCommentList &&
+            this.secondCommentList.map(j => {
+              let timestamp = new Date();
+              let time = timestamp.getTime() - dateTimeStamp(j.createtime);
+              if (time < 3600000) {
+                j.createtime = Math.round(time / 1000 / 60) + "分钟前";
+              } else if (time >= 3600000 && time < 86400000) {
+                j.createtime = Math.round(time / 1000 / 60 / 60) + "小时前";
+              } else if (time >= 86400000) {
+                j.createtime = Math.round(time / 1000 / 60 / 60 / 24) + "天前";
+              }
+              if (i._id == j.parentid) {
+                i.childList.push(j);
+              }
+            });
+        });
+      this.loading = false;
+      console.log(this.firstCommentList);
+    },
+    getArticleInfo(type) {
       GetArticleInfoById({ _id: this.articleid })
         .then(res => {
           console.log(res);
-          this.articleInfo = (res && res.data[0]) || {};
-          this.articleInfo.createtime = formatDateTime(
-            dateTimeStamp(this.articleInfo.createtime)
-          );
+          if (res) {
+            this.articleInfo = (res && res.data[0]) || {};
+            this.articleInfo.createtime = formatDateTime(
+              dateTimeStamp(this.articleInfo.createtime)
+            );
+            if (type === "look") {
+              this.addArticleLook();
+            }
+          } else {
+            this.getArticleInfo();
+          }
         })
         .catch(err => {
           console.log(err);
@@ -172,6 +393,10 @@ export default {
     showDetail(data) {
       console.log(data);
       this.articleid = data._id;
+      // this.$router.push({
+      //   path: "/article_detail",
+      //   query: { articleid: data._id}
+      // });
     },
     //格式化推荐文章
     formatArticleList() {
@@ -216,15 +441,14 @@ export default {
   watch: {
     newArticleList: {
       handler(newval, old) {
-        console.log(newval);
         this.formatArticleList();
       },
       deep: true
     },
     articleid: {
       handler(newval, old) {
-        console.log(newval);
         this.getArticleInfo();
+        this.getCommentsList();
       },
       deep: true
     }
@@ -311,5 +535,30 @@ h1 {
   background: #e74141;
   border: solid #e74141 1px;
   transition: all 1s;
+}
+.user_comment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.comment_info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.comment_box {
+  border-bottom: solid #999 1px;
+}
+.demo {
+  text-align: center;
+  width: 100%;
+  height: 160px;
+  z-index: 999;
+}
+.demo:hover {
+  border-top: 40px solid rgba(17, 2, 2, 0.5);
+  color: #fff;
+  transition: all 0.5s;
 }
 </style>
