@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 
 Vue.config.productionTip = false
 
-const whiteList = ['/','/login','/register']// 免登录白名单
+const whiteList = ['/','/login','/register','/list_by_sort','/article_detail','/video_detail']// 免登录白名单
 
 router.beforeEach((to, from, next) => {
   console.log(store.state)
@@ -20,7 +20,6 @@ router.beforeEach((to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
       next()
     } else {
-      Vue.$message.error('请登录')
       next('/login') // 否则全部重定向到登录页
     }
   }

@@ -47,3 +47,46 @@ export const dateTimeStamp = function (data) {
     let timestamp = date.getTime()
     return timestamp
 }
+
+//获取html字符串中图片src
+//第一张图片src
+
+export const getFirstPic = (str) => {
+    let data = ''
+    str.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/, function (match, capture) {
+        data = capture
+    })
+    return data
+}
+//所有图片的src
+
+export const getimgsrc = (htmlstr) => {
+    var reg = /<img.+?src=('|")?([^'"]+)('|")?(?:\s+|>)/gim
+    var arr = []
+    var tem = null
+    while (tem = reg.exec(htmlstr)) {
+        arr.push(tem[2])
+    }
+    return arr
+}
+
+// export const getVideoImg = (url) => {
+//     let $video =
+//         '<div><video controls src="' +
+//         url +
+//         '"></video></div><div> </div>';
+//     let box = document.getElementById("box_video");
+//     box.innerHTML = $video;
+//     console.log(box);
+//     let videoElement = document.getElementById("video");
+//     videoElement.addEventListener("canplay", function (_event) {
+//         let canvas = document.createElement("canvas");
+//         canvas.width = videoElement.videoWidth;
+//         canvas.height = videoElement.videoHeight;
+//         canvas
+//             .getContext("2d")
+//             .drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+//         console.log(canvas.toDataURL("image/png")); //第一帧图片url
+//         return canvas.toDataURL('image/png')
+//     });
+// }

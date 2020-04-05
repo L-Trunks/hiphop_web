@@ -15,6 +15,9 @@ export default {
 </script>
 
 <style>
+#app{
+  font-family: 'Courier New', Courier, monospace
+}
 .router-link {
   text-decoration: none;
 }
@@ -23,5 +26,11 @@ export default {
 }
 a {
   text-decoration: none;
+}
+.el-pagination{
+  text-align: center
+}
+.el-carousel button{
+background: #000
 }
 </style>

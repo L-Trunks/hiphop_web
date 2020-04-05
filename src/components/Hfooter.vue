@@ -11,7 +11,7 @@ export default {
   name: "Hfooter"
 };
 </script>
-<style>
+<style scoped>
 #red {
   margin-top:150px;
   border-top: solid #ff7a7a;

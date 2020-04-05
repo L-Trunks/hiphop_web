@@ -1,0 +1,315 @@
+<template>
+  <div>
+    <el-row class>
+      <el-col class="article" :span="12" :offset="4">
+        <div class="article_header">
+          <h1>{{articleInfo.title}}</h1>
+          <div class="article_info_user">
+            <div>
+              <i class="el-icon-user-solid"></i>
+              作者:{{articleInfo.articleUser && articleInfo.articleUser[0].nickname ||''}}
+              <i
+                class="el-icon-timer"
+              ></i>
+              发布时间:{{articleInfo.createtime}}
+            </div>
+            <div>
+              <i class="el-icon-chat-dot-square"></i>
+              评论数:{{articleInfo.commentscount}}
+              <i class="el-icon-star-on"></i>
+              收藏数:{{articleInfo.collectscount}}
+              <i class="el-icon-thumb"></i>
+              点赞数:{{articleInfo.goodscount}}
+            </div>
+          </div>
+        </div>
+        <div class="article_info">
+          <div v-html="articleInfo.article"></div>
+        </div>
+        <div class="article_bottom">
+          <i class="el-icon-collection-tag" style="font-size:26px"></i>
+          <el-tooltip class="item" effect="dark" content="文章分类" placement="right-start">
+            <span
+              @click="goListBySort"
+            >{{articleInfo.articleSort && articleInfo.articleSort[0].sortname}}</span>
+          </el-tooltip>
+        </div>
+        <div class="comment">
+          <div class="comment_header">评论</div>
+          <div class="top_model_top">
+            <el-input style="width:50%" placeholder="请输入内容" v-model="commentInfo">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-button type="primary" @click="addComment" class="search_btn" size="big">发表</el-button>
+          </div>
+          <div class="comment_info">
+            <div>
+              <div></div>
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </el-col>
+      <el-col class :span="4">
+        <div class="new_article">
+          <el-card shadow="never" class="box-card">
+            <div slot="header" class="clearfix">
+              <span>推荐文章</span>
+            </div>
+            <el-card
+              class="card"
+              v-for="(item, index) in articleList"
+              :key="index"
+              v-if="index<4"
+              @click.native="showDetail(item)"
+              :body-style="{ padding: '0px' }"
+            >
+              <div
+                :style="{ background: 'url('+item.imgurl+') no-repeat center center', backgroundSize: '100% 100%',width:'100%',height:'200px'}"
+              >
+                <div class="demo"></div>
+              </div>
+              <div style="padding: 14px;">
+                <span class="title_art">{{item.title}}</span>
+                <div class="bottom clearfix">
+                  <time class="time">
+                    {{ item.createtime }}
+                    <br />
+                    发布者：{{ item.nickname }}
+                  </time>
+                </div>
+              </div>
+            </el-card>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
+<script>
+import { GetArticleListByUser, GetArticleInfoById } from "../api/article_api";
+import { mapState, mapMutations, mapActions } from "vuex";
+import { dateTimeStamp, formatDateTime, getFirstPic } from "../utils/util";
+import {
+  ArticleAddGoods,
+  ArticleRemoveGoods,
+  ArticleGetGoodsStatus,
+  ArticleAddCollect,
+  ArticleRemoveCollect,
+  ArticleAddComments,
+  ArticleSelectComments
+} from "../api/article_info_api";
+import { PageConfig } from "../utils/tools";
+export default {
+  name: "ArticleDetail",
+  data() {
+    return {
+      articleid: "",
+      articleList: [],
+      articleInfo: {},
+      PageConfig,
+      commentInfo: ""
+    };
+  },
+  created() {
+    this.articleid = this.$route.query.articleid;
+  },
+  mounted() {
+    this.getArticleInfo();
+    this.formatArticleList();
+    this.getCommentsList();
+  },
+  methods: {
+    //
+    addComment() {
+      if (this.commentInfo === "") {
+        this.$message.error("请输入评论");
+        return;
+      }
+      ArticleAddComments({
+        articleid:this.articleid,
+        from: this.userid,
+        to: this.articleInfo.userid,
+        commentinfo: this.commentInfo,
+        parentid: "0",
+        type: "2"
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    //获取评论列表
+    getCommentsList() {
+      ArticleSelectComments({
+        type: "2",
+        articleid: this.articleid,
+        ...PageConfig
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    getArticleInfo() {
+      GetArticleInfoById({ _id: this.articleid })
+        .then(res => {
+          console.log(res);
+          this.articleInfo = (res && res.data[0]) || {};
+          this.articleInfo.createtime = formatDateTime(
+            dateTimeStamp(this.articleInfo.createtime)
+          );
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    showDetail(data) {
+      console.log(data);
+      this.articleid = data._id;
+    },
+    //格式化推荐文章
+    formatArticleList() {
+      let list = (this.newArticleList && this.newArticleList.data) || [];
+      this.articleList = [];
+      list.map(i => {
+        i.imgurl =
+          getFirstPic(i.article) ||
+          "http://localhost:8888/public/images/noimage.jpg";
+        i.createtime = formatDateTime(dateTimeStamp(i.createtime));
+        i.nickname = (i.articleUser[0] && i.articleUser[0].nickname) || "";
+        i.sortname = i.articleSort[0].sortname || "";
+        this.articleList.push(i);
+      });
+      console.log(this.articleList);
+    },
+    goListBySort(data) {
+      console.log(data);
+      this.$router.push({
+        path: "/list_by_sort",
+        query: {
+          sortid: this.articleInfo.sortid,
+          sortname: this.articleInfo.articleSort[0].sortname
+        }
+      });
+    }
+  },
+  computed: {
+    ...mapState({
+      isLogin: state => state.isLogin,
+      userid: state => state.userid,
+      userInfo: state => state.userInfo,
+      danceSortList: state => state.danceSortList,
+      newArticleList: state => state.newArticleList,
+      newVideoList: state => state.newVideoList,
+      messageList: state => state.messageList,
+      videoResult: state => state.videoResult,
+      articleResult: state => state.articleResult,
+      rotationImgList: state => state.rotationImgList
+    })
+  },
+  watch: {
+    newArticleList: {
+      handler(newval, old) {
+        console.log(newval);
+        this.formatArticleList();
+      },
+      deep: true
+    },
+    articleid: {
+      handler(newval, old) {
+        console.log(newval);
+        this.getArticleInfo();
+      },
+      deep: true
+    }
+  }
+};
+</script>
+<style scoped>
+.title_art {
+  font-size: 14px;
+  color: #3a3a3a;
+  height: 50px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.article {
+  padding: 20px;
+}
+h1 {
+  text-align: center;
+}
+.article_header {
+  padding: 10px;
+  border-bottom: 1px solid rgb(7, 7, 7);
+}
+.article_info {
+  padding: 20px 20px 50px 20px;
+  /* border-bottom: 1px solid rgb(7, 7, 7); */
+}
+.article_info_user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  color: #999;
+  font-size: 12px;
+}
+.article_bottom {
+  padding: 20px;
+  color: #999;
+  font-size: 16px;
+}
+.article_bottom:hover {
+  color: brown;
+  transition: all 0.5s;
+}
+.title_art {
+  font-size: 14px;
+  color: #3a3a3a;
+  height: 50px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card {
+  margin: 20px;
+  /* width: 20%; */
+}
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.comment_header {
+  padding: 20px;
+  font-size: 26px;
+  font-weight: 900;
+  border-bottom: 1px solid #000;
+}
+.top_model_top {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  margin: 20px 0;
+}
+.search_btn {
+  background: #3e3c3a;
+  transition: all 1s;
+}
+.search_btn:hover {
+  background: #e74141;
+  border: solid #e74141 1px;
+  transition: all 1s;
+}
+</style>

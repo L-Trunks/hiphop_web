@@ -70,7 +70,7 @@ export default {
         if (res && res.code === '200') {
           console.log(res);
           this.changeIsLogin(true);
-          this.changeUserId(res.data._id);
+          this.changeUserId(res.data[0]._id);
           this.changeUserInfo(res.data[0]);
         } else {
           if(res.code=='1005'){
@@ -82,7 +82,7 @@ export default {
     this.GetAllDanceSortList()
     this.GetAllVideoList(PageConfig)
     this.GetAllArticleList(PageConfig)
-    this.GetAllRotationImgList()
+    this.GetAllRotationImgList({status:'1'})
   },
   methods:{
         ...mapMutations([
