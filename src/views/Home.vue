@@ -25,13 +25,21 @@
           <router-link to="/person">
             <el-button v-if="isLogin" type="info" icon="el-icon-user-solid" class size="small">个人中心</el-button>
           </router-link>
-            <el-button style="margin-left:10px" v-if="isLogin" @click="logout" type="danger" icon="el-icon-delete" class size="small">退出登录</el-button>
+          <el-button
+            style="margin-left:10px"
+            v-if="isLogin"
+            @click="logout"
+            type="danger"
+            icon="el-icon-delete"
+            class
+            size="small"
+          >退出登录</el-button>
           <router-link to="/login">
             <el-button v-if="!isLogin" type="info" icon="el-icon-user" class size="small">登录</el-button>
           </router-link>
           <router-link to="/register">
             <el-button
-            v-if="!isLogin"
+              v-if="!isLogin"
               style="margin-left:10px"
               type="primary"
               icon="el-icon-more-outline"
@@ -48,78 +56,95 @@
 </template>
 
 <script>
-import {GetVideoResultList,GetArticleResultList} from '../api/search_api'
-import {GetUserInfoByToken} from '../api/user_api'
-import {PageConfig} from '../utils/tools'
-import Hfooter from '../components/Hfooter'
-import {mapState,mapMutations,mapActions} from 'vuex'
+import { GetVideoResultList, GetArticleResultList } from "../api/search_api";
+import { GetUserInfoByToken } from "../api/user_api";
+import { PageConfig } from "../utils/tools";
+import Hfooter from "../components/Hfooter";
+import { mapState, mapMutations, mapActions } from "vuex";
 export default {
   name: "Home",
   data() {
     return {
       searchWord: "",
       logoUrl: "../images/logo.png",
-      PageConfig,
+      PageConfig
     };
   },
-  created(){
+  created() {
     let accessToken = localStorage.getItem("accessToken") || "";
     if (accessToken) {
       this.changeToken(accessToken);
-      GetUserInfoByToken({ accessToken: accessToken }).then(res => {
-        if (res && res.code === '200') {
-          console.log(res);
-          this.changeIsLogin(true);
-          this.changeUserId(res.data[0]._id);
-          this.changeUserInfo(res.data[0]);
-        } else {
-          if(res.code=='1005'){
-            this.$message.error('token失效，请重新登录')
+      GetUserInfoByToken({ accessToken: accessToken })
+        .then(res => {
+          if (res && res.code === "200") {
+            console.log(res);
+            this.changeIsLogin(true);
+            this.changeUserId(res.data[0]._id);
+            this.changeUserInfo(res.data[0]);
+          } else {
+            if (res.code == "1005") {
+              this.$message.error("token失效，请重新登录");
+            }
           }
-        }
-      });
+        })
+        .catch(err => {
+          this.$router.push("/login");
+          this.$message.error("token失效，请重新登录");
+        });
     }
-    this.GetAllDanceSortList()
-    this.GetAllVideoList(PageConfig)
-    this.GetAllArticleList(PageConfig)
-    this.GetAllRotationImgList({status:'1'})
+    this.GetAllDanceSortList();
+    this.GetAllVideoList(this.PageConfig);
+    this.GetAllArticleList(this.PageConfig);
+    this.GetAllRotationImgList({ status: "1" });
   },
-  methods:{
-        ...mapMutations([
+  mounted() {
+    if (this.userid==0) {
+      this.ArticleGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
+      this.VideoGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
+    }
+  },
+  methods: {
+    ...mapMutations([
       "changeVideoResult",
       "changeArticleResult",
-      'changeToken',
-      'changeIsLogin',
-      'changeUserId',
-      'changeUserInfo'
+      "changeToken",
+      "changeIsLogin",
+      "changeUserId",
+      "changeUserInfo"
     ]),
     ...mapActions([
+      "ArticleGetCollectList",
+      "VideoGetCollectList",
       "GetAllDanceSortList",
       "GetAllArticleList",
       "GetAllVideoList",
       "GetAllRotationImgList"
     ]),
-    getSearch(){
-      if(this.searchWord ===''){
-        this.$message.error('请输入要搜索的内容')
-        return
-      }else{
-        GetVideoResultList({keyword:this.searchWord,...PageConfig}).then(res=>{
-          console.log(res)
-          this.changeVideoResult(res.data||[])
-        }).catch(err=>{
-          console.log(err)
-        })
-        GetArticleResultList({keyword:this.searchWord,...PageConfig}).then(res=>{
-          this.changeArticleResult(res.data||[])
-          console.log(res)
-        }).catch(err=>{
-          console.log(err)
-        })
+    getSearch() {
+      if (this.searchWord === "") {
+        this.$message.error("请输入要搜索的内容");
+        return;
+      } else {
+        GetVideoResultList({ keyword: this.searchWord, ...PageConfig })
+          .then(res => {
+            console.log(res);
+            this.changeVideoResult(res.data || []);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        GetArticleResultList({ keyword: this.searchWord, ...PageConfig })
+          .then(res => {
+            this.changeArticleResult(res.data || []);
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
       this.$router.push("/search");
     },
-    logout(){
+    logout() {
       localStorage.setItem("accessToken", "");
       this.changeIsLogin(false);
       this.changeUserInfo({});
@@ -127,7 +152,15 @@ export default {
       this.$router.push("/");
     }
   },
-    computed: {
+    watch: {
+    userid: {
+      handler(newval, old) {
+            this.ArticleGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
+      this.VideoGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
+      },
+      deep: true
+    },},
+  computed: {
     ...mapState({
       isLogin: state => state.isLogin,
       userid: state => state.userid,
@@ -137,7 +170,7 @@ export default {
       newVideoList: state => state.newVideoList,
       messageList: state => state.messageList,
       videoResult: state => state.videoResult,
-      articleResult: state => state.articleResult,
+      articleResult: state => state.articleResult
     })
   },
   components: {

@@ -55,6 +55,11 @@ export default {
       }
     };
   },
+  mounted(){
+    if(localStorage.getItem("accessToken")){
+      this.$router.push('/')
+    }
+  },
   methods: {
     ...mapMutations([
       "changeUserId",

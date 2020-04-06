@@ -4,12 +4,13 @@ import {
 import {
     GetUserInfoById
 } from '../api/user_api'
-import { GetAllArticleList } from '../api/article_api'
-import { GetAllVideoList } from '../api/video_api'
+import { GetAllArticleList, GetArticleListByUser } from '../api/article_api'
+import { GetAllVideoList, GetVideoListByUser } from '../api/video_api'
 import { GetMessageListByUser } from '../api/message_api'
 import { VideoGetCollectList } from '../api/video_info_api'
 import { ArticleGetCollectList } from '../api/article_info_api'
 import { GetAllRotationImgList } from '../api/rotatin_img_api'
+import { GetNoticeListByUser } from '../api/notice_api'
 import Vue from 'vue'
 const actions = {
     //改变用户信息actions
@@ -17,7 +18,7 @@ const actions = {
         GetUserInfoById(params).then(res => {
             console.log(res)
 
-            context.commit('changeUserInfo', res.data);
+            context.commit('changeUserInfo', res.data[0]);
 
 
         }).catch(err => {
@@ -97,6 +98,36 @@ const actions = {
         GetAllRotationImgList(params).then(res => {
             console.log(res)
             context.commit('changeRotationImgList', res.data);
+        }).catch(err => {
+            console.log(err)
+
+        })
+    },
+    //更新用户文章列表
+    GetArticleListByUser(context, params) {
+        GetArticleListByUser(params).then(res => {
+            console.log(res)
+            context.commit('changeArticleList', res.data);
+        }).catch(err => {
+            console.log(err)
+
+        })
+    },
+    //更新用户视频列表
+    GetVideoListByUser(context, params) {
+        GetVideoListByUser(params).then(res => {
+            console.log(res)
+            context.commit('changeVideoList', res.data);
+        }).catch(err => {
+            console.log(err)
+
+        })
+    },
+    //更新用户关注列表
+    GetNoticeListByUser(context, params) {
+        GetNoticeListByUser(params).then(res => {
+            console.log(res)
+            context.commit('changeNoticeList', res.data);
         }).catch(err => {
             console.log(err)
 

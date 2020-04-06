@@ -24,7 +24,7 @@
             <div>
               <i class="el-icon-chat-dot-square"></i>
               评论数:{{videoInfo.commentscount}}
-              <i class="el-icon-star-on"></i>
+              <i class="el-icon-view"></i>
               浏览量:{{videoInfo.lookscount}}
               <i class="el-icon-thumb"></i>
               点赞数:{{videoInfo.goodscount}}
@@ -41,21 +41,33 @@
           ></vue-baberrage>
           <div class="prism-player" id="player-con"></div>
           <div style="padding-top:20px;text-align:right;font-size:14px;color:#999">
-              弹幕开关
-              <el-switch
-                v-model="barrageIsShow"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-                :active-value="true"
-                :inactive-value="false"
-              ></el-switch>
+            弹幕开关
+            <el-switch
+              v-model="barrageIsShow"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              :active-value="true"
+              :inactive-value="false"
+            ></el-switch>
           </div>
         </div>
         <div class="video_bottom">
-          <i class="el-icon-collection-tag" style="font-size:26px"></i>
-          <el-tooltip class="item" effect="dark" content="视频分类" placement="right-start">
-            <span @click="goListBySort">{{videoInfo.videoSort && videoInfo.videoSort[0].sortname}}</span>
-          </el-tooltip>
+          <div>
+            <i class="el-icon-collection-tag" style="font-size:26px"></i>
+            <el-tooltip class="item" effect="dark" content="视频分类" placement="right-start">
+              <span @click="goListBySort">{{videoInfo.videoSort && videoInfo.videoSort[0].sortname}}</span>
+            </el-tooltip>
+          </div>
+          <div>
+            <div>
+              <el-button
+                @click="collectVideo"
+                type="danger"
+                :icon="collectStatus ? 'el-icon-star-on':'el-icon-star-off'"
+                plain
+              >{{collectStatus ? '已收藏':'收藏'}}</el-button>
+            </div>
+          </div>
         </div>
         <el-tabs type="border-card">
           <el-tab-pane>
@@ -223,6 +235,7 @@ export default {
   data() {
     return {
       msg: "",
+      collectStatus: false,
       barrageIsShow: false,
       currentId: 0,
       barrageLoop: true,
@@ -238,19 +251,94 @@ export default {
       firstCommentList: [],
       secondCommentList: [],
       count: 0,
-      videoPlay: {}
+      videoPlay: {},
+      collectId: ""
     };
   },
   created() {
     this.videoid = this.$route.query.videoid;
+    this.VideoGetCollectList({
+      ...this.PageConfig,
+      userid: this.userid,
+      type: "1"
+    });
   },
   mounted() {
-    this.getVideoInfo("look");
+    this.getVideoInfo();
     this.formatArticleList();
     this.getCommentsList();
     this.addVideoLook();
+    this.getCollectstatus();
   },
   methods: {
+    ...mapActions(["ArticleGetCollectList", "VideoGetCollectList"]),
+    //获取收藏状态
+    getCollectstatus() {
+      console.log(this.videoCollectList);
+      this.collectStatus = false;
+      this.videoCollectList &&
+        this.videoCollectList.data &&
+        this.videoCollectList.data.map(i => {
+          if (i.videoid == this.videoid) {
+            this.collectStatus = true;
+            this.collectId = i._id
+          }
+        });
+    },
+    //收藏文章
+    collectVideo() {
+      if (this.collectStatus) {
+        this.$confirm("确定取消收藏吗？")
+          .then(res => {
+            VideoRemoveCollect({ _id: this.collectId })
+              .then(res => {
+                if (res && res.code == "200") {
+                  this.$message.success("取消收藏成功");
+                  this.collectStatus = true;
+                  this.VideoGetCollectList({
+                    ...this.PageConfig,
+                    userid: this.userid,
+                    type: "1"
+                  });
+                } else {
+                  this.$message.error("出现错误，请稍候再试");
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                this.$message.error("出现错误，请稍候再试");
+              });
+          })
+          .catch(err => {
+            return;
+          });
+      } else {
+        VideoAddCollect({
+          userid: this.userid,
+          videoid: this.videoid,
+          type: "1"
+        })
+          .then(res => {
+            console.log(res);
+            if (res && res.code == "200") {
+              this.$message.success("收藏成功");
+              this.collectStatus = true;
+              this.collectId = res.data._id;
+              this.VideoGetCollectList({
+                ...this.PageConfig,
+                userid: this.userid,
+                type: "1"
+              });
+            } else {
+              this.$message.error("出现错误，请稍候再试");
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message.error("出现错误，请稍候再试");
+          });
+      }
+    },
     setBaberrageStatus() {
       if (this.videoPlay._status == "playing") {
         this.barrageIsShow = true;
@@ -263,7 +351,7 @@ export default {
       this.barrageList.push({
         id: ++this.currentId,
         avatar:
-          data.toUser[0].imgurl ||
+          data.fromUser[0].imgurl ||
           "http://localhost:8888/public/images/user1.jpg",
         msg: data.commentinfo,
         time: 5,
@@ -605,10 +693,23 @@ export default {
       newArticleList: state => state.newArticleList,
       messageList: state => state.messageList,
       videoResult: state => state.videoResult,
-      rotationImgList: state => state.rotationImgList
+      rotationImgList: state => state.rotationImgList,
+      videoCollectList: state => state.videoCollectList
     })
   },
   watch: {
+    videoCollectList: {
+      handler(newval, old) {
+        this.getCollectstatus();
+      },
+      deep: true
+    },
+    videoInfo: {
+      handler(newval, old) {
+        this.addVideoLook();
+      },
+      deep: true
+    },
     newArticleList: {
       handler(newval, old) {
         this.formatArticleList();
@@ -619,6 +720,7 @@ export default {
       handler(newval, old) {
         this.getVideoInfo();
         this.getCommentsList();
+        this.getCollectstatus();
       },
       deep: true
     }
@@ -664,6 +766,9 @@ h1 {
   padding: 20px;
   color: #999;
   font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .video_bottom:hover {
   color: brown;

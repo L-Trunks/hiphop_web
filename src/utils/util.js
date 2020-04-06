@@ -70,6 +70,11 @@ export const getimgsrc = (htmlstr) => {
     return arr
 }
 
+//设置图片大小
+export const setImgSize = (htmlstr, w, h) => {
+    let arr = htmlstr.replace(/<img/g, '<img width=' + w + 'px height=' + h + 'px')
+    return arr
+}
 // export const getVideoImg = (url) => {
 //     let $video =
 //         '<div><video controls src="' +

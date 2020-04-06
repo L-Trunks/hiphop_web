@@ -135,8 +135,18 @@ export default {
       }
     };
   },
+  mounted() {
+    if (localStorage.getItem("accessToken")) {
+      this.$router.push("/");
+    }
+  },
   methods: {
-    ...mapMutations(["changeUserId", "changeUserInfo", "changeToken",'changeIsLogin']),
+    ...mapMutations([
+      "changeUserId",
+      "changeUserInfo",
+      "changeToken",
+      "changeIsLogin"
+    ]),
     userRegister(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -164,6 +174,7 @@ export default {
                       console.log(3);
                       this.registerForm = {
                         ...this.registerForm,
+                        imgurl: "http://localhost:8888/public/images/user1.jpg",
                         birthday: dateTimeStamp(this.registerForm.birthday),
                         permission: "0"
                       };

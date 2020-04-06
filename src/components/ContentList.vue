@@ -121,7 +121,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #999;
   color: #000;
 }
 .title_art {
@@ -135,14 +134,14 @@ export default {
 }
 .card_box {
   display: flex;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   flex-direction: row;
   flex-wrap: wrap;
 }
 
 .card {
   margin: 10px;
-  width: 20%;
+  width: 22%;
 }
 .box-card {
   margin: 5px;

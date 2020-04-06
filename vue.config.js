@@ -1,8 +1,9 @@
+const webpack = require('webpack')
 module.exports = {
   // 基本路径
   // baseUrl: './',
   // 输出文件目录
-  lintOnSave:false,
+  lintOnSave: false,
   outputDir: 'dist',
   runtimeCompiler: true,
   publicPath: './', // 设置打包文件相对路径
@@ -20,4 +21,10 @@ module.exports = {
       }
     }
   },
+  chainWebpack: config => {
+    config.plugin('provide').use(webpack.ProvidePlugin, [{
+      'window.Quill': 'quill/dist/quill.js',
+      'Quill': 'quill/dist/quill.js'
+    }]);
+  }
 }

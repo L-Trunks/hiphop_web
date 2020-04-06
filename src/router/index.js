@@ -9,7 +9,14 @@ import ArticleDetail from '../components/ArticleDetail.vue';
 import VideoDetail from '../components/VideoDetail.vue';
 import RotationImgDetail from '../components/RotationImgDetail.vue';
 import UserPerson from '../components/UserPerson.vue';
-import AddArticle from '../components/AddArticle.vue';
+import AddArticle from '../components/person/AddArticle.vue';
+import MyArticle from '../components/person/MyArticle.vue';
+import AddVideo from '../components/person/AddVideo.vue';
+import MyVideo from '../components/person/MyVideo.vue';
+import CollectArticle from '../components/person/CollectArticle.vue';
+import CollectVideo from '../components/person/CollectVideo.vue';
+import UpdateUserInfo from '../components/person/UpdateUserInfo.vue';
+import UpdateArticle from '../components/person/UpdateArticle.vue';
 
 Vue.use(VueRouter)
 
@@ -33,12 +40,43 @@ const routes = [
       },
       {
         path: '/person',
-        component: UserPerson
+        component: UserPerson,
+        children: [
+          {
+            path: '/person/add_article',
+            component: AddArticle
+          },
+          {
+            path: '/person/my_article',
+            component: MyArticle
+          },
+          {
+            path: '/person/add_video',
+            component: AddVideo
+          },
+          {
+            path: '/person/my_video',
+            component: MyVideo
+          },
+          {
+            path: '/person/collect_article',
+            component: CollectArticle
+          },
+          {
+            path: '/person/collect_video',
+            component: CollectVideo
+          },
+          {
+            path: '/person/update_user_info',
+            component: UpdateUserInfo
+          },
+          {
+            path: '/person/update_article',
+            component: UpdateArticle
+          },
+        ]
       },
-      {
-        path: '/addArticle',
-        component: AddArticle
-      },
+
       {
         path: '/list_by_sort',
         component: ListBySort
@@ -52,8 +90,8 @@ const routes = [
         component: VideoDetail
       },
       {
-        path:'rotation_img_detail',
-        component:RotationImgDetail
+        path: 'rotation_img_detail',
+        component: RotationImgDetail
       }
     ]
   }

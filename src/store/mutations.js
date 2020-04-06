@@ -41,7 +41,7 @@ const mutations = {
     changeRotationImgList(state, params) {
         state.rotationImgList = params;
     },
-    
+
     changeVideoResult(state, params) {
         state.videoResult = params;
     },
@@ -53,6 +53,15 @@ const mutations = {
     },
     changeIsLogin(state, params) {
         state.isLogin = params;
+    },
+    changeArticleList(state, params) {
+        state.articleList = params;
+    },
+    changeVideoList(state, params) {
+        state.videoList = params;
+    },
+    changeNoticeList(state, params) {
+        state.noticeList = params;
     },
 }
 export default mutations

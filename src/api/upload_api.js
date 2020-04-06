@@ -4,13 +4,13 @@ const url = '/upload'
 /**
  * 图片上传
  */
-export const UploadImage = () => {
-    return get(url+'/image')
+export const UploadImage = (params) => {
+    return post(url+'/image',params)
 }
 
 /**
  * 视频上传
  */
 export const UploadVideo = (params) => {
-    return get(url+'/video',params)
+    return post(url+'/video',params)
 }

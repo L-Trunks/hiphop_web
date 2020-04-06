@@ -24,7 +24,7 @@
             <div>
               <i class="el-icon-chat-dot-square"></i>
               评论数:{{articleInfo.commentscount}}
-              <i class="el-icon-star-on"></i>
+              <i class="el-icon-view"></i>
               浏览量:{{articleInfo.lookscount}}
               <i class="el-icon-thumb"></i>
               点赞数:{{articleInfo.goodscount}}
@@ -35,12 +35,22 @@
           <div v-html="articleInfo.article"></div>
         </div>
         <div class="article_bottom">
-          <i class="el-icon-collection-tag" style="font-size:26px"></i>
-          <el-tooltip class="item" effect="dark" content="文章分类" placement="right-start">
-            <span
-              @click="goListBySort"
-            >{{articleInfo.articleSort && articleInfo.articleSort[0].sortname}}</span>
-          </el-tooltip>
+          <div>
+            <i class="el-icon-collection-tag" style="font-size:26px"></i>
+            <el-tooltip class="item" effect="dark" content="文章分类" placement="right-start">
+              <span
+                @click="goListBySort"
+              >{{articleInfo.articleSort && articleInfo.articleSort[0].sortname}}</span>
+            </el-tooltip>
+          </div>
+          <div>
+            <el-button
+              @click="collectArticle"
+              type="danger"
+              :icon="collectStatus ? 'el-icon-star-on':'el-icon-star-off'"
+              plain
+            >{{collectStatus ? '已收藏':'收藏'}}</el-button>
+          </div>
         </div>
         <div class="comment">
           <div v-loading="loading" class="comment_header">评论</div>
@@ -167,7 +177,12 @@ import {
   AddArticleLook
 } from "../api/article_api";
 import { mapState, mapMutations, mapActions } from "vuex";
-import { dateTimeStamp, formatDateTime, getFirstPic } from "../utils/util";
+import {
+  dateTimeStamp,
+  formatDateTime,
+  getFirstPic,
+  setImgSize
+} from "../utils/util";
 import {
   ArticleAddGoods,
   ArticleRemoveGoods,
@@ -186,6 +201,7 @@ export default {
   data() {
     return {
       loading: false,
+      collectStatus: false,
       articleid: "",
       articleList: [],
       articleInfo: {},
@@ -193,19 +209,94 @@ export default {
       commentInfo: "",
       secondCommentInfo: "",
       firstCommentList: [],
-      secondCommentList: []
+      secondCommentList: [],
+      collectId: ""
     };
   },
   created() {
     this.articleid = this.$route.query.articleid;
+    this.ArticleGetCollectList({
+      ...this.PageConfig,
+      userid: this.userid,
+      type: "1"
+    });
   },
   mounted() {
-    this.getArticleInfo("look");
+    this.getArticleInfo();
     this.formatArticleList();
     this.getCommentsList();
     this.addArticleLook();
+    this.getCollectstatus();
   },
   methods: {
+    ...mapActions(["ArticleGetCollectList", "VideoGetCollectList"]),
+    //获取收藏状态
+    getCollectstatus() {
+      console.log(this.articleCollectList);
+      this.collectStatus = false;
+      this.articleCollectList &&
+        this.articleCollectList.data &&
+        this.articleCollectList.data.map(i => {
+          if (i.articleid == this.articleid) {
+            this.collectStatus = true;
+            this.collectId = i._id
+          }
+        });
+    },
+    //收藏文章
+    collectArticle() {
+      if (this.collectStatus) {
+        this.$confirm("确定取消收藏吗？")
+          .then(res => {
+            ArticleRemoveCollect({ _id: this.collectId })
+              .then(res => {
+                if (res && res.code == "200") {
+                  this.$message.success("取消收藏成功");
+                  this.collectStatus = true;
+                  this.ArticleGetCollectList({
+                    ...this.PageConfig,
+                    userid: this.userid,
+                    type: "1"
+                  });
+                } else {
+                  this.$message.error("出现错误，请稍候再试");
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                this.$message.error("出现错误，请稍候再试");
+              });
+          })
+          .catch(err => {
+            return;
+          });
+      } else {
+        ArticleAddCollect({
+          userid: this.userid,
+          articleid: this.articleid,
+          type: "1"
+        })
+          .then(res => {
+            console.log(res);
+            if (res && res.code == "200") {
+              this.$message.success("收藏成功");
+              this.collectStatus = true;
+              this.collectId = res.data._id;
+              this.ArticleGetCollectList({
+                ...this.PageConfig,
+                userid: this.userid,
+                type: "1"
+              });
+            } else {
+              this.$message.error("出现错误，请稍候再试");
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message.error("出现错误，请稍候再试");
+          });
+      }
+    },
     //浏览量加一
     addArticleLook() {
       console.log(this.articleInfo.lookscount);
@@ -220,6 +311,8 @@ export default {
           .catch(err => {
             console.log(err);
           });
+      } else {
+        // this.addArticleLook()
       }
     },
     //更新点赞收藏评论数
@@ -370,7 +463,7 @@ export default {
       this.loading = false;
       console.log(this.firstCommentList);
     },
-    getArticleInfo(type) {
+    getArticleInfo() {
       GetArticleInfoById({ _id: this.articleid })
         .then(res => {
           console.log(res);
@@ -379,9 +472,11 @@ export default {
             this.articleInfo.createtime = formatDateTime(
               dateTimeStamp(this.articleInfo.createtime)
             );
-            if (type === "look") {
-              this.addArticleLook();
-            }
+            this.articleInfo.article = setImgSize(
+              this.articleInfo.article,
+              600,
+              350
+            );
           } else {
             this.getArticleInfo();
           }
@@ -435,13 +530,26 @@ export default {
       messageList: state => state.messageList,
       videoResult: state => state.videoResult,
       articleResult: state => state.articleResult,
-      rotationImgList: state => state.rotationImgList
+      rotationImgList: state => state.rotationImgList,
+      articleCollectList: state => state.articleCollectList
     })
   },
   watch: {
+    articleCollectList: {
+      handler(newval, old) {
+        this.getCollectstatus();
+      },
+      deep: true
+    },
     newArticleList: {
       handler(newval, old) {
         this.formatArticleList();
+      },
+      deep: true
+    },
+    articleInfo: {
+      handler(newval, old) {
+        this.addArticleLook();
       },
       deep: true
     },
@@ -449,6 +557,7 @@ export default {
       handler(newval, old) {
         this.getArticleInfo();
         this.getCommentsList();
+        this.getCollectstatus();
       },
       deep: true
     }
@@ -491,6 +600,9 @@ h1 {
   padding: 20px;
   color: #999;
   font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .article_bottom:hover {
   color: brown;
