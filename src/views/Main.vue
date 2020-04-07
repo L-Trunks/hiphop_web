@@ -34,7 +34,7 @@
               <div class="announcement_item">
                 <div
                   class="ano_text"
-                  v-for="(item,index) in rotationImgList"
+                  v-for="(item,index) in announcementList"
                   :key="index"
                 >{{item.imgtitle}}</div>
               </div>
