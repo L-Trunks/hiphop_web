@@ -815,6 +815,7 @@ h1 {
   transition: all 1s;
 }
 .user_comment {
+  margin-top: 5px;
   display: flex;
   flex-direction: row;
   align-items: center;

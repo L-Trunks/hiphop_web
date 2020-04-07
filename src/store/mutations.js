@@ -63,5 +63,11 @@ const mutations = {
     changeNoticeList(state, params) {
         state.noticeList = params;
     },
+    changeMatchList(state, params) {
+        state.matchList = params;
+    },
+    changeAnnouncementList(state, params) {
+        state.announcementList = params;
+    },
 }
 export default mutations

@@ -1,46 +1,63 @@
 <template>
   <div>
     <el-row class>
-      <el-col :loading="loading" class="img" :span="12" :offset="4">
+      <el-col class="article" :span="12" :offset="4">
         <el-breadcrumb
           style="margin-top:20px;margin-left:10px"
           separator-class="el-icon-arrow-right"
         >
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item
-            :to="{ path: '/' }"
-          >{{imgInfo.status && imgInfo.status=='3'?'公告' :'活动＆文章'}}</el-breadcrumb-item>
-          <el-breadcrumb-item>内容详情</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/' }">活动列表</el-breadcrumb-item>
+          <el-breadcrumb-item>活动详情</el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="img_header">
-          <h1>{{imgInfo.imgtitle}}</h1>
-          <div class="img_info_user">
+        <div class="article_header">
+          <h1>{{articleInfo.title}}</h1>
+          <div class="article_info_user">
             <div>
               <i class="el-icon-user-solid"></i>
-              作者:{{imgInfo.imgUser &&imgInfo.imgUser[0] && imgInfo.imgUser[0].nickname ||''}}
+              作者:{{articleInfo.activityUser && articleInfo.activityUser[0].nickname ||''}}
               <i
                 class="el-icon-timer"
               ></i>
-              发布时间:{{imgInfo.createtime}}
+              发布时间:{{articleInfo.createtime}}
             </div>
             <div>
-              <i class="el-icon-star-on"></i>
-              浏览量:{{lookscount}}
+              <i class="el-icon-view"></i>
+              浏览量:{{articleInfo.lookscount}}
             </div>
           </div>
-          <div class="img_info">
-            <div v-html="imgInfo.introduce"></div>
-          </div>
-          <div class="img_bottom">
+        </div>
+        <div class="article_info">
+          <h2>活动海报</h2>
+          <img width="600px" height="400px" :src="articleInfo.imgurl" alt="暂无图片" />
+        </div>
+        <div class="article_bottom">
+          <div>
             <i class="el-icon-collection-tag" style="font-size:26px"></i>
-            <el-tooltip class="item" effect="dark" content="文章分类" placement="right-start">
-              <span>{{imgInfo.status && imgInfo.status=='3'?'公告' :'活动＆文章'}}</span>
+            <el-tooltip class="item" effect="dark" content="活动＆比赛" placement="right-start">
+              <span @click="goListBySort">活动&比赛</span>
             </el-tooltip>
           </div>
         </div>
+        <el-tabs type="border-card">
+          <el-tab-pane>
+            <span slot="label">
+              <i class="el-icon-date"></i> 活动信息
+            </span>
+            <div class="video_info">
+              <div v-html="articleInfo.article"></div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane>
+            <span slot="label">
+              <i class="el-icon-s-home"></i> 活动地址
+            </span>
+            <div>{{articleInfo.address}}</div>
+          </el-tab-pane>
+        </el-tabs>
       </el-col>
       <el-col class :span="4">
-        <div class="new_img">
+        <div class="new_article">
           <el-card shadow="never" class="box-card">
             <div slot="header" class="clearfix">
               <span>推荐文章</span>
@@ -64,7 +81,7 @@
                   <time class="time">
                     {{ item.createtime }}
                     <br />
-                    发布者：{{ item && item.nickname ||'' }}
+                    发布者：{{ item.nickname }}
                   </time>
                 </div>
               </div>
@@ -77,7 +94,11 @@
 </template>
 
 <script>
-import { GetRotationImgListByInfo } from "../api/rotatin_img_api";
+import {
+  GetArticleListByUser,
+  GetArticleInfoById,
+  AddArticleLook
+} from "../api/article_api";
 import { mapState, mapMutations, mapActions } from "vuex";
 import {
   dateTimeStamp,
@@ -85,63 +106,64 @@ import {
   getFirstPic,
   setImgSize
 } from "../utils/util";
+import { GetMarchInfoByInfo } from "../api/match_api";
 import { PageConfig } from "../utils/tools";
 export default {
-  name: "RotationImgDetail",
+  name: "ArticleDetail",
   data() {
     return {
       loading: false,
-      imgid: "",
-      lookscount: 58,
+      collectStatus: false,
+      matchid: "",
       articleList: [],
-      imgInfo: {},
+      articleInfo: {},
       PageConfig,
       commentInfo: "",
       secondCommentInfo: "",
       firstCommentList: [],
-      secondCommentList: []
+      secondCommentList: [],
+      collectId: ""
     };
   },
   created() {
-    this.imgid = this.$route.query.imgid;
+    this.matchid = this.$route.query.matchid;
   },
   mounted() {
-    this.getImgInfo("look");
+    this.getArticleInfo();
     this.formatArticleList();
   },
   methods: {
-    getImgInfo(type) {
-      this.loading = true;
-
-      GetRotationImgListByInfo({ _id: this.imgid })
+    ...mapActions(["ArticleGetCollectList", "VideoGetCollectList"]),
+    
+    getArticleInfo() {
+      GetMarchInfoByInfo({ _id: this.matchid })
         .then(res => {
           console.log(res);
           if (res) {
-            this.imgInfo = (res && res.data[0]) || {};
-            this.imgInfo.createtime = formatDateTime(
-              dateTimeStamp(this.imgInfo.createtime)
+            this.articleInfo = (res && res.data[0]) || {};
+            this.articleInfo.createtime = formatDateTime(
+              dateTimeStamp(this.articleInfo.createtime)
             );
-            this.imgInfo.introduce = setImgSize(
-              this.imgInfo.introduce,
+            this.articleInfo.article = setImgSize(
+              this.articleInfo.article,
               600,
               350
             );
-            this.loading = false;
           } else {
-            this.getImgInfo();
+            this.getArticleInfo();
           }
         })
         .catch(err => {
-          this.loading = false;
           console.log(err);
         });
     },
     showDetail(data) {
       console.log(data);
-      this.$router.push({
-        path: "/article_detail",
-        query: { articleid: data._id }
-      });
+      this.matchid = data._id;
+      // this.$router.push({
+      //   path: "/article_detail",
+      //   query: { matchid: data._id}
+      // });
     },
     //格式化推荐文章
     formatArticleList() {
@@ -157,6 +179,9 @@ export default {
         this.articleList.push(i);
       });
       console.log(this.articleList);
+    },
+    goListBySort(data) {
+      console.log(data);
     }
   },
   computed: {
@@ -169,20 +194,21 @@ export default {
       newVideoList: state => state.newVideoList,
       messageList: state => state.messageList,
       videoResult: state => state.videoResult,
-      imgResult: state => state.imgResult,
-      rotationImgList: state => state.rotationImgList
+      articleResult: state => state.articleResult,
+      rotationImgList: state => state.rotationImgList,
+      articleCollectList: state => state.articleCollectList
     })
   },
   watch: {
-    newArticleList: {
+    matchid: {
       handler(newval, old) {
-        this.formatArticleList();
+        this.getArticleInfo();
       },
       deep: true
     },
-    imgid: {
+    newArticleList: {
       handler(newval, old) {
-        this.getImgInfo();
+        this.formatArticleList();
       },
       deep: true
     }
@@ -199,21 +225,21 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.img {
+.article {
   padding: 20px;
 }
 h1 {
   text-align: center;
 }
-.img_header {
+.article_header {
   padding: 10px;
   border-bottom: 1px solid rgb(7, 7, 7);
 }
-.img_info {
+.article_info {
   padding: 20px 20px 50px 20px;
   /* border-bottom: 1px solid rgb(7, 7, 7); */
 }
-.img_info_user {
+.article_info_user {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -221,12 +247,15 @@ h1 {
   color: #999;
   font-size: 12px;
 }
-.img_bottom {
+.article_bottom {
   padding: 20px;
   color: #999;
   font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
-.img_bottom:hover {
+.article_bottom:hover {
   color: brown;
   transition: all 0.5s;
 }
@@ -271,6 +300,7 @@ h1 {
   transition: all 1s;
 }
 .user_comment {
+  margin-top: 5px;
   display: flex;
   flex-direction: row;
   align-items: center;

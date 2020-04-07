@@ -17,7 +17,8 @@
           <span class="title_art">{{item.title}}</span>
           <div class="bottom clearfix">
             <time class="time">
-              <span style="margin:5px 0"> 作者：{{ item.nickname }}</span> <br>
+              <span style="margin:5px 0">作者：{{ item.nickname }}</span>
+              <br />
               收藏时间：{{ item.createtime }}
               <br />
             </time>
@@ -94,29 +95,29 @@ export default {
   methods: {
     ...mapActions(["GetArticleListByUser", "ArticleGetCollectList"]),
     deleteArticle(data) {
-        this.$confirm("确定取消收藏吗？")
-          .then(res => {
-            ArticleRemoveCollect({ _id: data._id })
-              .then(res => {
-                if (res && res.code == "200") {
-                  this.$message.success("取消收藏成功");
-                  this.ArticleGetCollectList({
-                    ...this.PageConfig,
-                    userid: this.userid,
-                    type: "1"
-                  });
-                } else {
-                  this.$message.error("出现错误，请稍候再试");
-                }
-              })
-              .catch(err => {
-                console.log(err);
+      this.$confirm("确定取消收藏吗？")
+        .then(res => {
+          ArticleRemoveCollect({ _id: data._id })
+            .then(res => {
+              if (res && res.code == "200") {
+                this.$message.success("取消收藏成功");
+                this.ArticleGetCollectList({
+                  ...this.PageConfig,
+                  userid: this.userid,
+                  type: "1"
+                });
+              } else {
                 this.$message.error("出现错误，请稍候再试");
-              });
-          })
-          .catch(err => {
-            return;
-          });
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message.error("出现错误，请稍候再试");
+            });
+        })
+        .catch(err => {
+          return;
+        });
     },
     showDetail(data) {
       this.$router.push({
@@ -126,13 +127,17 @@ export default {
     },
     formatArticleList() {
       this.articleLoading = true;
-      let list = (this.articleCollectList && this.articleCollectList.data) || [];
-      this.PageConfig.total = (this.articleCollectList && this.articleCollectList.total) || 0;
+      let list =
+        (this.articleCollectList && this.articleCollectList.data) || [];
+      this.PageConfig.total =
+        (this.articleCollectList && this.articleCollectList.total) || 0;
       this.list = [];
       list.map(i => {
         i.imgurl =
-          getFirstPic(i.articleUser[0].article) ||
-          "http://localhost:8888/public/images/noimage.jpg";
+          getFirstPic(
+            (i.articleUser && i.articleUser[0] && i.articleUser[0].article) ||
+              ""
+          ) || "http://localhost:8888/public/images/noimage.jpg";
         i.createtime = formatDateTime(dateTimeStamp(i.createtime));
         i.nickname = (i.collectUser[0] && i.collectUser[0].nickname) || "";
         this.list.push(i);
@@ -172,7 +177,7 @@ export default {
       danceSortList: state => state.danceSortList,
       articleList: state => state.articleList,
       newVideoList: state => state.newVideoList,
-       articleCollectList: state => state.articleCollectList
+      articleCollectList: state => state.articleCollectList
     })
   }
 };

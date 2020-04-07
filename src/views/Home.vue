@@ -96,6 +96,8 @@ export default {
     this.GetAllVideoList(this.PageConfig);
     this.GetAllArticleList(this.PageConfig);
     this.GetAllRotationImgList({ status: "1" });
+    this.GetAllMatchList({})
+    this.GetAllAnnouncementList({status:'3'})
   },
   mounted() {
     if (this.userid==0) {
@@ -113,6 +115,8 @@ export default {
       "changeUserInfo"
     ]),
     ...mapActions([
+      'GetAllMatchList',
+      'GetAllAnnouncementList',
       "ArticleGetCollectList",
       "VideoGetCollectList",
       "GetAllDanceSortList",

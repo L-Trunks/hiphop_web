@@ -131,6 +131,7 @@ export default {
                     userid: "",
                     articlepermission: ""
                   };
+                  this.GetAllArticleList()
                   this.$message.success("发布成功，快去看看吧");
                   // this.$router.push({
                   //   path: "/article_detail",

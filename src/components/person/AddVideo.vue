@@ -101,7 +101,7 @@ export default {
     this.formatSort();
   },
   methods: {
-    ...mapActions(["GetAllDanceSortList", "GetAllRotationImgList"]),
+    ...mapActions(["GetAllDanceSortList", "GetAllRotationImgList",'GetAllVideoList']),
     handleImgRemove(file, fileList) {
       console.log(file, fileList);
       this.videoForm.firsturl = "";
@@ -152,6 +152,7 @@ export default {
                   };
                   this.fileList = []
                   this.fileImgList = []
+                  this.GetAllVideoList()
                   this.$message.success("发布成功，快去看看吧");
                 })
                 .catch(err => {

@@ -16,6 +16,8 @@ const state = {
     videoResult:null,
     articleResult:null,
     token:null,
-    isLogin:null
+    isLogin:null,
+    matchList:[],
+    announcementList:[]
 }
 export default state;

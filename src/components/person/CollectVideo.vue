@@ -17,7 +17,8 @@
           <span class="title_art">{{item.title}}</span>
           <div class="bottom clearfix">
             <time class="time">
-              作者：{{ item.nickname }} <br>
+              作者：{{ item.nickname }}
+              <br />
               收藏时间：{{ item.createtime }}
               <br />
             </time>
@@ -120,7 +121,9 @@ export default {
         (this.videoCollectList && this.videoCollectList.total) || 0;
       this.list = [];
       list.map(i => {
-        i.imgurl = i.videoUser[0].firsturl;
+        i.imgurl =
+          (i.videoUser && i.videoUser[0] && i.videoUser[0].firsturl) ||
+          "http://localhost:8888/public/images/noimage.jpg";
         i.createtime = formatDateTime(dateTimeStamp(i.createtime));
         i.nickname = (i.collectUser[0] && i.collectUser[0].nickname) || "";
         this.list.push(i);
@@ -169,7 +172,7 @@ export default {
 .demo {
   text-align: center;
   width: 100%;
-  height: 160px;
+  height: 100％;
   z-index: 999;
 }
 .demo:hover {

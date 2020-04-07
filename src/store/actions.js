@@ -11,6 +11,7 @@ import { VideoGetCollectList } from '../api/video_info_api'
 import { ArticleGetCollectList } from '../api/article_info_api'
 import { GetAllRotationImgList } from '../api/rotatin_img_api'
 import { GetNoticeListByUser } from '../api/notice_api'
+import { GetAllMatchList} from '../api/match_api'
 import Vue from 'vue'
 const actions = {
     //改变用户信息actions
@@ -98,6 +99,26 @@ const actions = {
         GetAllRotationImgList(params).then(res => {
             console.log(res)
             context.commit('changeRotationImgList', res.data);
+        }).catch(err => {
+            console.log(err)
+
+        })
+    },
+    //更新公告列表
+    GetAllAnnouncementList(context, params) {
+        GetAllRotationImgList(params).then(res => {
+            console.log(res)
+            context.commit('changeAnnouncementList', res.data);
+        }).catch(err => {
+            console.log(err)
+
+        })
+    },
+    //更新活动列表
+    GetAllMatchList(context, params) {
+        GetAllMatchList(params).then(res => {
+            console.log(res)
+            context.commit('changeMatchList', res.data);
         }).catch(err => {
             console.log(err)
 

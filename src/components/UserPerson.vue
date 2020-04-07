@@ -7,7 +7,7 @@
             <img
               :src="userData && userData.imgurl || 'http://localhost:8888/public/images/user1.jpg'"
               class="user_img"
-              alt='找不到图片'
+              alt="找不到图片"
               srcset
             />
           </div>
@@ -73,14 +73,33 @@
             <el-submenu index="4">
               <template slot="title">
                 <i class="el-icon-user"></i>
+                <span>我的活动&比赛</span>
+              </template>
+              <router-link to="/person/add_activity">
+                <el-menu-item index="4-1">发布活动</el-menu-item>
+              </router-link>
+              <router-link to="/person/my_activity">
+                <el-menu-item index="4-2">我的活动&比赛</el-menu-item>
+              </router-link>
+            </el-submenu>
+            <el-submenu index="5">
+              <template slot="title">
+                <i class="el-icon-user"></i>
                 <span>我的账户</span>
               </template>
               <router-link to="/person/update_user_info">
-                <el-menu-item index="4-1">修改个人信息</el-menu-item>
+                <el-menu-item index="5-1">修改个人信息</el-menu-item>
               </router-link>
-              <el-menu-item @click="logout" index="4-2">退出登录</el-menu-item>
+              <el-menu-item @click="logout" index="5-2">退出登录</el-menu-item>
             </el-submenu>
           </el-menu>
+          <el-breadcrumb
+            style="margin-top:20px;margin-left:10px"
+            separator-class="el-icon-arrow-right"
+          >
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>个人中心</el-breadcrumb-item>
+          </el-breadcrumb>
         </el-col>
         <el-col :span="12">
           <router-view></router-view>
@@ -97,12 +116,12 @@ export default {
   data() {
     return {
       collectcounts: 0,
-      userData:{}
+      userData: {}
     };
   },
   created() {},
   mounted() {
-    this.userData = this.userInfo
+    this.userData = this.userInfo;
     this.$router.push("/person");
   },
   methods: {
@@ -145,7 +164,7 @@ export default {
     })
   },
   watch: {
-    userInfo:{
+    userInfo: {
       handler(newval, old) {
         console.log(newval);
         this.userData = newval;

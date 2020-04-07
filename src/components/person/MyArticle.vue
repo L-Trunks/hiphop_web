@@ -79,7 +79,7 @@ export default {
     this.formatArticleList();
   },
   methods: {
-    ...mapActions(["GetArticleListByUser"]),
+    ...mapActions(["GetArticleListByUser","GetAllArticleList"]),
     updateArticle(data) {
       this.$router.push({
         path: "/person/update_article",

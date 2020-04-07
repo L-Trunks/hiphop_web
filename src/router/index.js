@@ -13,10 +13,14 @@ import AddArticle from '../components/person/AddArticle.vue';
 import MyArticle from '../components/person/MyArticle.vue';
 import AddVideo from '../components/person/AddVideo.vue';
 import MyVideo from '../components/person/MyVideo.vue';
+import AddActivity from '../components/person/AddActivity.vue';
+import MyActivity from '../components/person/MyActivity.vue';
 import CollectArticle from '../components/person/CollectArticle.vue';
 import CollectVideo from '../components/person/CollectVideo.vue';
 import UpdateUserInfo from '../components/person/UpdateUserInfo.vue';
 import UpdateArticle from '../components/person/UpdateArticle.vue';
+import ActivityDetail from '../components/ActivityDetail.vue';
+import ActivityList from '../components/ActivityList.vue';
 
 Vue.use(VueRouter)
 
@@ -59,6 +63,14 @@ const routes = [
             component: MyVideo
           },
           {
+            path: '/person/add_activity',
+            component: AddActivity
+          },
+          {
+            path: '/person/my_activity',
+            component: MyActivity
+          },
+          {
             path: '/person/collect_article',
             component: CollectArticle
           },
@@ -90,9 +102,17 @@ const routes = [
         component: VideoDetail
       },
       {
-        path: 'rotation_img_detail',
+        path: '/rotation_img_detail',
         component: RotationImgDetail
-      }
+      },
+      {
+        path: '/activity_list',
+        component: ActivityList
+      },
+      {
+        path: '/activity_detail',
+        component: ActivityDetail
+      },
     ]
   }
 ]

@@ -4,8 +4,8 @@ const url = '/rotationImg'
 /**
  * 获取所有图片
  */
-export const GetAllRotationImgList = () => {
-    return get(url+'/get_all_rotation_img_list')
+export const GetAllRotationImgList = (params) => {
+    return get(url+'/get_all_rotation_img_list',params)
 }
 
 /**

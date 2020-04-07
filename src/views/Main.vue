@@ -25,6 +25,50 @@
             shadow="hover"
           >{{item.sortname}}</el-card>
         </div>
+        <div class="match_and_announcement">
+          <div class="announcement">
+            <el-card shadow="never" class="box-card">
+              <div slot="header" class="clearfix">
+                <div style="text-align:center">公告</div>
+              </div>
+              <div class="announcement_item">
+                <div
+                  class="ano_text"
+                  v-for="(item,index) in rotationImgList"
+                  :key="index"
+                >{{item.imgtitle}}</div>
+              </div>
+            </el-card>
+          </div>
+          <div style="width: 100%;">
+            <el-card shadow="never" class="box-card">
+              <div slot="header" class="clearfix">
+                <span>活动</span>
+                <el-button
+                  style="float: right; padding: 3px 0"
+                  @click="showMoreMatchList"
+                  type="text"
+                >查看更多>>></el-button>
+              </div>
+              <div class="my_activity">
+                <el-card
+                  class="activity_card"
+                  v-for="(item, index) in matchList"
+                  :key="index"
+                  :body-style="{ padding: '0px' }"
+                >
+                  <div
+                    @click="showMatchDetail(item)"
+                    :style="{ background: 'url('+item.imgurl+') no-repeat center center', backgroundSize: '100% 100%',width:'100%',height:'200px'}"
+                  >
+                    <div class="demo"></div>
+                    <span class="match_title">{{item.title}}</span>
+                  </div>
+                </el-card>
+              </div>
+            </el-card>
+          </div>
+        </div>
         <content-list
           :loading="articleLoading"
           style="margin-top:35px"
@@ -119,6 +163,17 @@ export default {
       "GetAllRotationImgList"
     ]),
     //
+    showMoreMatchList() {
+      this.$router.push({
+        path: "/activity_list",
+      });
+    },
+    showMatchDetail(data) {
+      this.$router.push({
+        path: "/activity_detail",
+        query: { matchid: data._id }
+      });
+    },
     goListBySort(data) {
       console.log(data);
       this.$router.push({
@@ -224,7 +279,9 @@ export default {
       messageList: state => state.messageList,
       videoResult: state => state.videoResult,
       articleResult: state => state.articleResult,
-      rotationImgList: state => state.rotationImgList
+      rotationImgList: state => state.rotationImgList,
+      announcementList: state => state.announcementList,
+      matchList: state => state.matchList
     })
   },
   watch: {
@@ -267,6 +324,36 @@ export default {
   flex-direction: row;
   justify-content: space-around;
 }
+.match_and_announcement {
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  /* align-items: center; */
+}
+.announcement {
+  width: 32%;
+}
+.announcement_item {
+  width: 100%;
+  display: flex;
+  padding: 5px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #141414;
+}
+.ano_text {
+  width: 100%;
+  padding: 5px 0;
+  text-align: center;
+  cursor: pointer;
+  color: #535251;
+  white-space: nowrap;
+}
+.ano_text:hover {
+  color: #1f1f1f;
+}
 .sort {
   margin: 5px;
   flex: 1;
@@ -299,5 +386,38 @@ export default {
   z-index: 20;
   border-radius: 5px;
   background-color: rgba(0, 0, 0, 0.3);
+}
+.my_activity {
+  width: 100%;
+  display: flex;
+  /* justify-content: space-around; */
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.activity_card {
+  margin: 0 5px;
+  width: 25%;
+}
+.demo {
+  text-align: center;
+  width: 100%;
+  height: 150px;
+  z-index: 999;
+  border-top: 50px solid rgba(17, 2, 2, 0.5);
+}
+.activity_card:hover .demo {
+  border-top: 0px solid rgba(17, 2, 2, 0.5);
+  transition: all 0.5s;
+}
+.match_title {
+  margin-top: 5px;
+  display: flex;
+  padding: 2px;
+  white-space: nowrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
 }
 </style>
