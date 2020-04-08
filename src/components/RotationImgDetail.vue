@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class>
-      <el-col :loading="loading" class="img" :span="12" :offset="4">
+      <el-col style="background:#fff" :loading="loading" class="img" :span="12" :offset="4">
         <el-breadcrumb
           style="margin-top:20px;margin-left:10px"
           separator-class="el-icon-arrow-right"

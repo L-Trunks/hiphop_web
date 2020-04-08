@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/message'
+const url = '/api/message'
 /**
  * 新增消息
  */

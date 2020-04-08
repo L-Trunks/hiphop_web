@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class>
-      <el-col class="article" :span="12" :offset="4">
+      <el-col style="background:#fff" class="article" :span="12" :offset="4">
         <el-breadcrumb
           style="margin-top:20px;margin-left:10px"
           separator-class="el-icon-arrow-right"
@@ -31,7 +31,7 @@
             </div>
           </div>
         </div>
-        <div class="article_info">
+        <div  class="article_info">
           <div v-html="articleInfo.article"></div>
         </div>
         <div class="article_bottom">
@@ -239,12 +239,16 @@ export default {
         this.articleCollectList.data.map(i => {
           if (i.articleid == this.articleid) {
             this.collectStatus = true;
-            this.collectId = i._id
+            this.collectId = i._id;
           }
         });
     },
     //收藏文章
     collectArticle() {
+      if (this.userid == 0) {
+        this.$message.error("请登录");
+        return;
+      }
       if (this.collectStatus) {
         this.$confirm("确定取消收藏吗？")
           .then(res => {
@@ -353,6 +357,10 @@ export default {
       this.loading = false;
     },
     addComment(data) {
+      if (this.userid == 0) {
+        this.$message.error("请登录");
+        return;
+      }
       if (this.commentInfo === "") {
         this.$message.error("请输入评论");
         return;
@@ -376,6 +384,10 @@ export default {
         });
     },
     addSecondComment(data, index) {
+      if (this.userid == 0) {
+        this.$message.error("请登录");
+        return;
+      }
       if (this.secondCommentInfo === "") {
         this.$message.error("请输入评论");
         return;

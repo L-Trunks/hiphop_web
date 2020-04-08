@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class>
-      <el-col class="video" :span="12" :offset="4">
+      <el-col style="background:#fff" class="video" :span="12" :offset="4">
         <el-breadcrumb
           style="margin-top:20px;margin-left:10px"
           separator-class="el-icon-arrow-right"
@@ -281,12 +281,16 @@ export default {
         this.videoCollectList.data.map(i => {
           if (i.videoid == this.videoid) {
             this.collectStatus = true;
-            this.collectId = i._id
+            this.collectId = i._id;
           }
         });
     },
     //收藏文章
     collectVideo() {
+      if (this.userid == 0) {
+        this.$message.error("请登录");
+        return;
+      }
       if (this.collectStatus) {
         this.$confirm("确定取消收藏吗？")
           .then(res => {
@@ -510,6 +514,10 @@ export default {
       this.loading = false;
     },
     addComment(data) {
+      if (this.userid == 0) {
+        this.$message.error("请登录");
+        return;
+      }
       if (this.commentInfo === "") {
         this.$message.error("请输入评论");
         return;
@@ -534,6 +542,10 @@ export default {
         });
     },
     addSecondComment(data, index) {
+      if (this.userid == 0) {
+        this.$message.error("请登录");
+        return;
+      }
       if (this.secondCommentInfo === "") {
         this.$message.error("请输入评论");
         return;

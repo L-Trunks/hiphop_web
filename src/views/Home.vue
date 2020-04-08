@@ -50,7 +50,7 @@
         </div>
       </el-col>
     </el-row>
-    <router-view></router-view>
+    <router-view class="box"></router-view>
     <Hfooter></Hfooter>
   </div>
 </template>
@@ -97,6 +97,7 @@ export default {
     this.GetAllArticleList(this.PageConfig);
     this.GetAllRotationImgList({ status: "1" });
     this.GetAllMatchList({})
+    this.GetAllRoomList({status:'0'})
     this.GetAllAnnouncementList({status:'3'})
   },
   mounted() {
@@ -112,9 +113,11 @@ export default {
       "changeToken",
       "changeIsLogin",
       "changeUserId",
-      "changeUserInfo"
+      "changeUserInfo",
+      'changeKeyword'
     ]),
     ...mapActions([
+      'GetAllRoomList',
       'GetAllMatchList',
       'GetAllAnnouncementList',
       "ArticleGetCollectList",
@@ -125,28 +128,8 @@ export default {
       "GetAllRotationImgList"
     ]),
     getSearch() {
-      if (this.searchWord === "") {
-        this.$message.error("请输入要搜索的内容");
-        return;
-      } else {
-        GetVideoResultList({ keyword: this.searchWord, ...PageConfig })
-          .then(res => {
-            console.log(res);
-            this.changeVideoResult(res.data || []);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-        GetArticleResultList({ keyword: this.searchWord, ...PageConfig })
-          .then(res => {
-            this.changeArticleResult(res.data || []);
-            console.log(res);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-      this.$router.push("/search");
+      this.changeKeyword(this.searchWord)
+      this.$router.push({path:"/search",query:{keyword:this.searchWord}});
     },
     logout() {
       localStorage.setItem("accessToken", "");
@@ -174,7 +157,8 @@ export default {
       newVideoList: state => state.newVideoList,
       messageList: state => state.messageList,
       videoResult: state => state.videoResult,
-      articleResult: state => state.articleResult
+      articleResult: state => state.articleResult,
+      roomList: state => state.roomList,
     })
   },
   components: {
@@ -183,6 +167,9 @@ export default {
 };
 </script>
 <style scoped>
+.box{
+  background: url("../../public/images/1.svg") no-repeat 120% 60%;
+}
 .top_search {
   padding: 10px;
   align-items: center;

@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/letter'
+const url = '/api/letter'
 
 
 /**

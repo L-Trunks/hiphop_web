@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/articleInfo'
+const url = '/api/articleInfo'
 /**
  * 点赞文章
  */

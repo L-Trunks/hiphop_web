@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/danceSort'
+const url = '/api/danceSort'
 /**
  * 获取所有舞种
  */

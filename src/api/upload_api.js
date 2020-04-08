@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/upload'
+const url = '/api/upload'
 /**
  * 图片上传
  */

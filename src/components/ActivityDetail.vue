@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class>
-      <el-col class="article" :span="12" :offset="4">
+      <el-col style="background:#fff" class="article" :span="12" :offset="4">
         <el-breadcrumb
           style="margin-top:20px;margin-left:10px"
           separator-class="el-icon-arrow-right"
@@ -52,7 +52,16 @@
             <span slot="label">
               <i class="el-icon-s-home"></i> 活动地址
             </span>
-            <div>{{articleInfo.address}}</div>
+            <div style="padding:20px">{{articleInfo.address}}</div>
+            <div style="text-align:right">
+              <a
+                :href="addressUrl+articleInfo.address"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <el-button type="danger" size="small">查看地址详情</el-button>
+              </a>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -115,6 +124,7 @@ export default {
       loading: false,
       collectStatus: false,
       matchid: "",
+      addressUrl:'http://localhost:8080/#/address?address=',
       articleList: [],
       articleInfo: {},
       PageConfig,
@@ -134,7 +144,12 @@ export default {
   },
   methods: {
     ...mapActions(["ArticleGetCollectList", "VideoGetCollectList"]),
-    
+    // address() {
+    //   this.$router.push({
+    //     path: "/address",
+    //     query: { address: this.articleInfo.address }
+    //   });
+    // },
     getArticleInfo() {
       GetMarchInfoByInfo({ _id: this.matchid })
         .then(res => {
@@ -159,11 +174,11 @@ export default {
     },
     showDetail(data) {
       console.log(data);
-      this.matchid = data._id;
-      // this.$router.push({
-      //   path: "/article_detail",
-      //   query: { matchid: data._id}
-      // });
+      // this.matchid = data._id;
+      this.$router.push({
+        path: "/article_detail",
+        query: { matchid: data._id }
+      });
     },
     //格式化推荐文章
     formatArticleList() {

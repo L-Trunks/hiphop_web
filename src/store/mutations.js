@@ -69,5 +69,11 @@ const mutations = {
     changeAnnouncementList(state, params) {
         state.announcementList = params;
     },
+    changeRoomList(state, params) {
+        state.roomList = params;
+    },
+    changeKeyword(state, params) {
+        state.keyword = params;
+    },
 }
 export default mutations

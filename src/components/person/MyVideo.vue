@@ -8,7 +8,6 @@
         :body-style="{ padding: '0px' }"
       >
         <div
-          @click="showDetail(item)"
           :style="{ background: 'url('+item.imgurl+') no-repeat center center', backgroundSize: '100% 100%',width:'100%',height:'200px'}"
         >
           <div class="demo"></div>

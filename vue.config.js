@@ -18,7 +18,15 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
-      }
+      },
+      '/chatapi': {
+        target: 'http://127.0.0.1:7788', //对应自己的接口
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/chatapi': ''
+        }
+      },
     }
   },
   chainWebpack: config => {

@@ -11,7 +11,8 @@ import { VideoGetCollectList } from '../api/video_info_api'
 import { ArticleGetCollectList } from '../api/article_info_api'
 import { GetAllRotationImgList } from '../api/rotatin_img_api'
 import { GetNoticeListByUser } from '../api/notice_api'
-import { GetAllMatchList} from '../api/match_api'
+import { GetAllMatchList } from '../api/match_api'
+import { GetAllRoomList } from '../api/room_api'
 import Vue from 'vue'
 const actions = {
     //改变用户信息actions
@@ -154,6 +155,17 @@ const actions = {
 
         })
     },
+    //更新房间列表
+    GetAllRoomList(context, params) {
+        GetAllRoomList(params).then(res => {
+            console.log(res)
+            context.commit('changeRoomList', res.data);
+        }).catch(err => {
+            console.log(err)
+
+        })
+    },
+
 }
 
 export default actions;

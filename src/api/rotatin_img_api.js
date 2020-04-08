@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/rotationImg'
+const url = '/api/rotationImg'
 /**
  * 获取所有图片
  */

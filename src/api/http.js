@@ -6,7 +6,7 @@ import Vue from 'vue'
 import { Loading } from 'element-ui'
 
 Vue.use(Loading);
-axios.defaults.baseURL = '/api';//本地
+// axios.defaults.baseURL = '/api';//本地
 axios.defaults.timeout = 5000 // 请求超时
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; //配置请求头
 axios.defaults.withCredentials = true

@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/search'
+const url = '/api/search'
 /**
  * 获取视频结果
  */

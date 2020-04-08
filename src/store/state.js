@@ -18,6 +18,8 @@ const state = {
     token:null,
     isLogin:null,
     matchList:[],
-    announcementList:[]
+    announcementList:[],
+    keyword:'',
+    roomList:[]
 }
 export default state;

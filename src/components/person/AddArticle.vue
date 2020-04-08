@@ -69,6 +69,7 @@ import MarkDownEditor from "../components/MarkDownEditor";
 import { AddArticle } from "../../api/article_api";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { setImgSize } from "../../utils/util";
+import { PageConfig } from "../../utils/tools";
 export default {
   name: "AddArticle",
   data() {
@@ -80,6 +81,7 @@ export default {
         userid: "",
         articlepermission: ""
       },
+      PageConfig,
       articleContent: "",
       articleRules: {
         title: [{ required: true, message: "请输入文章标题", trigger: "blur" }],
@@ -131,7 +133,8 @@ export default {
                     userid: "",
                     articlepermission: ""
                   };
-                  this.GetAllArticleList()
+
+                  this.GetAllArticleList(this.PageConfig);
                   this.$message.success("发布成功，快去看看吧");
                   // this.$router.push({
                   //   path: "/article_detail",

@@ -2,7 +2,7 @@
   <div>
     <el-row class="person_top">
       <el-col class="video" :span="16" :offset="4">
-        <div class="box">
+        <div class="person_box">
           <div class="user_img_box">
             <img
               :src="userData && userData.imgurl || 'http://localhost:8888/public/images/user1.jpg'"
@@ -30,9 +30,16 @@
         </div>
       </el-col>
     </el-row>
-    <el-row>
-      <div style="padding:20px 0">
+    <el-row style="background:#fff">
+      <div style="padding:20px 0;">
         <el-col :span="4" :offset="4">
+          <el-breadcrumb
+            style="margin:20px 0;margin-left:10px"
+            separator-class="el-icon-arrow-right"
+          >
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>个人中心</el-breadcrumb-item>
+          </el-breadcrumb>
           <el-menu active-text-color="#ffd04b">
             <el-submenu index="1">
               <template slot="title">
@@ -70,7 +77,7 @@
                 <el-menu-item index="3-2">收藏视频</el-menu-item>
               </router-link>
             </el-submenu>
-            <el-submenu index="4">
+            <el-submenu v-if="userInfo.permission =='1' || userInfo.permission =='2'" index="4">
               <template slot="title">
                 <i class="el-icon-user"></i>
                 <span>我的活动&比赛</span>
@@ -93,16 +100,9 @@
               <el-menu-item @click="logout" index="5-2">退出登录</el-menu-item>
             </el-submenu>
           </el-menu>
-          <el-breadcrumb
-            style="margin-top:20px;margin-left:10px"
-            separator-class="el-icon-arrow-right"
-          >
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>个人中心</el-breadcrumb-item>
-          </el-breadcrumb>
         </el-col>
         <el-col :span="12">
-          <router-view></router-view>
+          <router-view class="personbox"></router-view>
         </el-col>
       </div>
     </el-row>
@@ -175,7 +175,10 @@ export default {
 };
 </script>
 <style scoped>
-.box {
+/* .personbox {
+  background: url("../../public/images/1.svg") no-repeat 10% 100%;
+} */
+.person_box {
   display: flex;
   flex-direction: row;
 }

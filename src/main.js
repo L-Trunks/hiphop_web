@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './plugins/element.js'
-import  mavonEditor  from 'mavon-editor'　//markdown编辑器
+import mavonEditor from 'mavon-editor'　//markdown编辑器
 import 'mavon-editor/dist/css/index.css'
 import quillEditor from 'vue-quill-editor' // 调用富文本编辑器
 import 'quill/dist/quill.snow.css' // 富文本编辑器外部引用样式  三种样式三选一引入即可
@@ -20,7 +20,7 @@ Vue.config.productionTip = false
 
 Vue.config.productionTip = false
 
-const whiteList = ['/','/login','/register','/list_by_sort','/article_detail','/video_detail','/rotation_img_detail']// 免登录白名单
+const whiteList = ['/', '/login', '/register', '/list_by_sort', '/article_detail', '/video_detail', '/rotation_img_detail', '/activity_list', '/activity_detail', '/search']// 免登录白名单
 
 router.beforeEach((to, from, next) => {
   console.log(store.state)

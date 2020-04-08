@@ -66,6 +66,7 @@ import MarkDownEditor from "../components/MarkDownEditor";
 import { AddVideo } from "../../api/video_api";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { setImgSize } from "../../utils/util";
+import { PageConfig } from "../../utils/tools";
 export default {
   name: "AddVideo",
   data() {
@@ -81,6 +82,7 @@ export default {
         userid: "",
         firsturl: ""
       },
+      PageConfig,
       videoContent: "",
       videoRules: {
         videotitle: [
@@ -101,7 +103,11 @@ export default {
     this.formatSort();
   },
   methods: {
-    ...mapActions(["GetAllDanceSortList", "GetAllRotationImgList",'GetAllVideoList']),
+    ...mapActions([
+      "GetAllDanceSortList",
+      "GetAllRotationImgList",
+      "GetAllVideoList"
+    ]),
     handleImgRemove(file, fileList) {
       console.log(file, fileList);
       this.videoForm.firsturl = "";
@@ -150,9 +156,9 @@ export default {
                     userid: "",
                     firsturl: ""
                   };
-                  this.fileList = []
-                  this.fileImgList = []
-                  this.GetAllVideoList()
+                  this.fileList = [];
+                  this.fileImgList = [];
+                  this.GetAllVideoList(this.PageConfig);
                   this.$message.success("发布成功，快去看看吧");
                 })
                 .catch(err => {

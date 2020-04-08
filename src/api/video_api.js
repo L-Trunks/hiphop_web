@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/video'
+const url = '/api/video'
 /**
  * 获取所有视频
  */

@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url= '/users'
+const url= '/api/users'
 /**
  * 登录
  */

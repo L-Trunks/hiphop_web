@@ -1,6 +1,6 @@
 <template>
   <div class>
-    <el-row class>
+    <el-row class="box">
       <el-col class :span="16" :offset="4">
         <el-carousel :loading="imgLoading" height="450px" class="img_card">
           <el-carousel-item v-for="(item,index) in imgList" :key="index">
@@ -34,6 +34,7 @@
               <div class="announcement_item">
                 <div
                   class="ano_text"
+                  @click="goRotationImgDetail(item)"
                   v-for="(item,index) in announcementList"
                   :key="index"
                 >{{item.imgtitle}}</div>
@@ -105,9 +106,46 @@
           layout="total,sizes, prev, pager, next"
           :total="VideoPageConfig.total"
         ></el-pagination>
+        <el-card shadow="never" class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="font-size: 20px;font-weight:800;">聊天室</span>
+            <div class="chat_box">
+              <div class="my_activity">
+                <el-card
+                  class="activity_card"
+                  v-for="(item, index) in roomList"
+                  :key="index"
+                  :body-style="{ padding: '0px' }"
+                >
+                  <div
+                    :style="{ background: 'url('+item.imgurl+') no-repeat center center', backgroundSize: '100% 100%',width:'100%',height:'200px'}"
+                  >
+                    <div class="room_title">{{item.title || ''}}</div>
+                    <div class="demo"></div>
+                    <div style="text-align:center">
+                      <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="'房间介绍：'+item.introduce"
+                        placement="right-start"
+                      >
+                        <a
+                          :href="'http://localhost:8080/#/chat_room?roomid='+item._id+'&imgurl='+item.imgurl+'&roomname='+item.title"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <el-button type="danger" size="small">进入房间</el-button>
+                        </a>
+                      </el-tooltip>
+                    </div>
+                  </div>
+                </el-card>
+              </div>
+            </div>
+          </div>
+        </el-card>
       </el-col>
     </el-row>
-    <div id="box_video" style="display:none"></div>
   </div>
 </template>
 
@@ -165,7 +203,7 @@ export default {
     //
     showMoreMatchList() {
       this.$router.push({
-        path: "/activity_list",
+        path: "/activity_list"
       });
     },
     showMatchDetail(data) {
@@ -281,7 +319,8 @@ export default {
       articleResult: state => state.articleResult,
       rotationImgList: state => state.rotationImgList,
       announcementList: state => state.announcementList,
-      matchList: state => state.matchList
+      matchList: state => state.matchList,
+      roomList: state => state.roomList
     })
   },
   watch: {
@@ -396,7 +435,7 @@ export default {
 }
 .activity_card {
   margin: 0 5px;
-  width: 25%;
+  width: 23%;
 }
 .demo {
   text-align: center;
@@ -419,5 +458,26 @@ export default {
   align-items: center;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
+}
+.chat_box {
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ebeef5;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px rgb(212, 212, 212);
+}
+.btn_chat {
+  background: #fff;
+  padding: 9px 15px;
+}
+.btn_chat:hover {
+  background: #fff;
+  padding: 9px 15px;
+}
+.room_title {
+  float: left;
+  color: #fff;
+  padding: 10px;
 }
 </style>

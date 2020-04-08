@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/keywords'
+const url = '/api/keywords'
 /**
  * 添加关键字
  */

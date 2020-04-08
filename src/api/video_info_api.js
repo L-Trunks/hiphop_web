@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/videoInfo'
+const url = '/api/videoInfo'
 /**
  * 点赞视频
  */

@@ -12,6 +12,11 @@ export default {
 </script>
 
 <style>
+body {
+  background: rgb(250, 250, 250);
+  background-size: 100% 100%;
+  
+}
 #app {
   font-family: "Courier New", Courier, monospace;
 }
@@ -32,5 +37,8 @@ a {
 }
 .baberrage-stage {
   height: 400px !important;
+}
+.el-loading-parent--hidden{
+  overflow: scroll !important;
 }
 </style>

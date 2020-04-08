@@ -21,6 +21,9 @@ import UpdateUserInfo from '../components/person/UpdateUserInfo.vue';
 import UpdateArticle from '../components/person/UpdateArticle.vue';
 import ActivityDetail from '../components/ActivityDetail.vue';
 import ActivityList from '../components/ActivityList.vue';
+import BaiduMap from '../components/BaiduMap.vue';
+import SearchResult from '../components/SearchResult.vue';
+import ChatRoom from '../components/ChatRoom.vue';
 
 Vue.use(VueRouter)
 
@@ -113,7 +116,19 @@ const routes = [
         path: '/activity_detail',
         component: ActivityDetail
       },
+      {
+        path: '/search',
+        component: SearchResult
+      },
+      {
+        path: '/chat_room',
+        component: ChatRoom
+      }
     ]
+  },
+  {
+    path: '/address',
+    component: BaiduMap
   }
 ]
 

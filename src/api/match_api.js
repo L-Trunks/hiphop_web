@@ -1,6 +1,6 @@
 import { get, post } from './http'
 
-const url = '/match'
+const url = '/api/match'
 /**
  * 获取所有活动
  */
