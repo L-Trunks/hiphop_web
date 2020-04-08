@@ -167,7 +167,7 @@ export default {
         this.editText = "";
         this.$refs.r_editText.focus();
         // 发送前更新本地chatLog
-        chat.chatTime = this.timeFormat(chat.chatTime);
+        chat.chatTime = formatDateTime(chat.chatTime);
         this.chatLog.push(chat);
         // document.querySelector(".chat-log").scrollTo(0, 99999999999);
       } else {
@@ -180,12 +180,12 @@ export default {
       let that = this;
       this.socket.on("joinToRoom", function(data) {
         let chat = data;
-        chat.chatTime = that.timeFormat(chat.chatTime);
+        chat.chatTime = formatDateTime(chat.chatTime);
         that.chatLog.push(chat);
       });
       this.socket.on("leaveToRoom", function(data) {
         let chat = data;
-        chat.chatTime = that.timeFormat(chat.chatTime);
+        chat.chatTime = formatDateTime(chat.chatTime);
         that.chatLog.push(chat);
       });
       this.socket.on("updateGroupNumber", function(data) {
@@ -194,41 +194,15 @@ export default {
       });
       this.socket.on("userQuit", function(data) {
         let chat = data;
-        chat.chatTime = that.timeFormat(chat.chatTime);
+        chat.chatTime = formatDateTime(chat.chatTime);
         //          that.chatLog.push(chat)
       });
       this.socket.on("broadChat", function(data) {
         let chat = data;
-        chat.chatTime = that.timeFormat(chat.chatTime);
+        chat.chatTime = formatDateTime(chat.chatTime);
         that.chatLog.push(chat);
       });
     },
-    // 时间格式化处理
-    add0(m) {
-      return m < 10 ? "0" + m : m;
-    },
-    timeFormat(timestamp) {
-      let time = new Date(timestamp);
-      let y = time.getFullYear();
-      let m = time.getMonth() + 1;
-      let d = time.getDate();
-      let h = time.getHours();
-      let mm = time.getMinutes();
-      let s = time.getSeconds();
-      return (
-        y +
-        "/" +
-        this.add0(m) +
-        "/" +
-        this.add0(d) +
-        " " +
-        this.add0(h) +
-        ":" +
-        this.add0(mm) +
-        ":" +
-        this.add0(s)
-      );
-    }
   },
   updated() {
     // 保持滚动到底部
