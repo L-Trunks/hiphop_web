@@ -13,7 +13,7 @@ export default {
 
 <style>
 body {
-  background: rgb(250, 250, 250);
+  /* background: rgb(250, 250, 250); */
   background-size: 100% 100%;
   
 }

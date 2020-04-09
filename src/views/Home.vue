@@ -101,6 +101,9 @@ export default {
     this.GetAllAnnouncementList({status:'3'})
   },
   mounted() {
+        document
+      .getElementsByTagName("body")[0]
+      .setAttribute("style", "overflow: scroll !important");
     if (this.userid==0) {
       this.ArticleGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
       this.VideoGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
