@@ -121,7 +121,7 @@ export default {
           });
         } else {
           // 提示获取失败
-          console.log(data.msg);
+          
         }
       });
     },
@@ -160,7 +160,7 @@ export default {
             "http://localhost:8888/public/images/noimage.jpg",
           chatType: "chat" // tips
         };
-        console.log(chat);
+        
         // 发送
         this.socket.emit("emitChat", chat);
         // 发送成功之后
@@ -231,14 +231,14 @@ export default {
   watch: {
     userid: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.joinRoom();
       },
       deep: true
     },
     userInfo: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.joinRoom();
       },
       deep: true

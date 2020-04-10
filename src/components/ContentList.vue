@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     showDetail(data) {
-      console.log(data);
+      
       if (this.type === "article") {
         this.$router.push({
           path: "/article_detail",

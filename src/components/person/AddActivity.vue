@@ -95,7 +95,7 @@ import editor from "../components/editor";
 import MarkDownEditor from "../components/MarkDownEditor";
 import { AddMatch } from "../../api/match_api";
 import { mapState, mapMutations, mapActions } from "vuex";
-import { setImgSize ,dateTimeStamp} from "../../utils/util";
+import { setImgSize, dateTimeStamp } from "../../utils/util";
 export default {
   name: "AddActivity",
   data() {
@@ -109,7 +109,7 @@ export default {
         address: "",
         article: "",
         imgurl: "",
-        phone:''
+        phone: ""
       },
       activityContent: "",
       activityRules: {
@@ -117,9 +117,7 @@ export default {
         address: [
           { required: true, message: "请输入活动地址", trigger: "blur" }
         ],
-        phone: [
-          { required: true, message: "请输入联系方式", trigger: "blur" }
-        ],
+        phone: [{ required: true, message: "请输入联系方式", trigger: "blur" }],
         starttime: [
           { required: true, message: "请选择开始时间", trigger: "blur" }
         ],
@@ -137,15 +135,24 @@ export default {
       fullscreenLoading: false
     };
   },
-  mounted() {},
+  mounted() {
+    if (
+      this.userInfo &&
+      this.userInfo.permission !== "1" &&
+      this.userInfo.permission !== "2"
+    ) {
+      this.$message.error('您无权访问此网页')
+      this.$router.push('/')
+    }
+  },
   methods: {
-    ...mapActions(["GetAllRotationImgList",'GetAllMatchList']),
+    ...mapActions(["GetAllRotationImgList", "GetAllMatchList"]),
     handleImgRemove(file, fileList) {
-      console.log(file, fileList);
+      
       this.activityForm.imgurl = "";
     },
     handleImgSuccess(file) {
-      console.log(file);
+      
       this.activityForm.imgurl = file.data.url;
     },
     handleImgExceed() {
@@ -153,7 +160,7 @@ export default {
     },
     showActivity() {
       this.dialoading = true;
-      console.log(this.activityForm);
+      
       this.dialogVisible = true;
       this.dialoading = false;
     },
@@ -173,30 +180,30 @@ export default {
                 endtime: dateTimeStamp(this.activityForm.endtime),
                 userid: this.userid
               };
-              console.log(this.activityForm)
+              
               AddMatch(this.activityForm)
                 .then(res => {
-                  console.log(res);
+                  
                   this.activityForm = {
                     title: "",
                     userid: "",
                     address: "",
                     article: "",
                     imgurl: "",
-                    phone:''
+                    phone: ""
                   };
                   this.fileList = [];
-                  this.content = ''
+                  this.content = "";
                   this.$message.success("发布成功，快去看看吧");
-                  this.GetAllMatchList({})
+                  this.GetAllMatchList({});
                 })
                 .catch(err => {
-                  console.log(err);
+                  
                   this.$message.error("出现错误，请稍候再试");
                 });
             })
             .catch(_ => {
-              return
+              return;
             });
         } else {
           return false;
@@ -204,7 +211,7 @@ export default {
       });
     },
     changeEditor(e) {
-      console.log(e);
+      
       this.$confirm("已编辑内容将会删除，确认切换吗？")
         .then(_ => {
           this.editorType = e;

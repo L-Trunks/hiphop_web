@@ -151,7 +151,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.logining = true;
-          console.log(this.registerForm);
+          
           VerifyUserName({ username: this.registerForm.username })
             .then(res => {
               if (res && res.code === "1003") {
@@ -161,24 +161,24 @@ export default {
               } else {
                 VerifyNickName({ nickname: this.registerForm.nickname })
                   .then(res => {
-                    console.log(res);
+                    
                     if (res && res.code === "1008") {
                       this.$message.error("昵称已被使用");
                       this.logining = false;
                       return;
                     } else {
-                      console.log(1);
+                      
                       this.registerForm.password = this.$md5(
                         this.registerForm.password
                       );
-                      console.log(3);
+                      
                       this.registerForm = {
                         ...this.registerForm,
                         imgurl: "http://localhost:8888/public/images/user1.jpg",
                         birthday: dateTimeStamp(this.registerForm.birthday),
                         permission: "0"
                       };
-                      console.log(this.registerForm);
+                      
                       Register(this.registerForm)
                         .then(res => {
                           if (res.data && res.data._id) {
@@ -189,7 +189,7 @@ export default {
                               password: this.registerForm.password
                             })
                               .then(res => {
-                                console.log(res);
+                                
                                 if (res.data && res.data.length > 0) {
                                   this.changeToken(res.accessToken);
                                   this.changeUserId(res.data[0].id);
@@ -212,24 +212,24 @@ export default {
                               })
                               .catch(err => {
                                 this.logining = false;
-                                console.log(err);
+                                
                                 this.$router.push("/login");
                                 this.$message.error("登录失败，请手动登录");
                               });
                           }
                         })
                         .catch(err => {
-                          console.log(err);
+                          
                         });
                     }
                   })
                   .catch(err => {
-                    console.log(err);
+                    
                   });
               }
             })
             .catch(err => {
-              console.log(err);
+              
             });
         } else {
           return false;

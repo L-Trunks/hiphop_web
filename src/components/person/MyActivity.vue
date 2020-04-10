@@ -45,6 +45,14 @@ export default {
     this.getActivity();
   },
   mounted() {
+    if (
+      this.userInfo &&
+      this.userInfo.permission !== "1" &&
+      this.userInfo.permission !== "2"
+    ) {
+      this.$message.error("您无权访问此网页");
+      this.$router.push("/");
+    }
     this.formatActivityList();
   },
   methods: {
@@ -53,11 +61,11 @@ export default {
     getActivity() {
       GetAllMatchList({ userid: this.userid })
         .then(res => {
-          console.log(res);
+          
           this.activityList = (res && res.data) || "";
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     deleteActivity(data) {
@@ -65,14 +73,14 @@ export default {
         .then(_ => {
           DeleteMatch({ _id: data._id })
             .then(res => {
-              console.log(res);
+              
 
               this.getActivity();
               this.GetAllMatchList();
               this.$message.success("删除成功");
             })
             .catch(err => {
-              console.log(err);
+              
               this.$message.error("删除失败，请稍候再试");
             });
         })
@@ -93,14 +101,14 @@ export default {
         // i.nickname = (i.matchUser[0] && i.matchUser[0].nickname) || "";
         this.list.push(i);
       });
-      console.log(this.list);
+      
       this.activityLoading = false;
     }
   },
   watch: {
     activityList: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatActivityList();
       },
       deep: true

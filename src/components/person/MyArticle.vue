@@ -90,7 +90,7 @@ export default {
         .then(_ => {
           DeleteArticle({ _id: data._id })
             .then(res => {
-              console.log(res);
+              
               this.$message.success("删除成功");
               this.GetArticleListByUser({
                 ...this.PageConfig,
@@ -98,7 +98,7 @@ export default {
               });
             })
             .catch(err => {
-              console.log(err);
+              
               this.$message.error("删除失败，请稍候再试");
             });
         })
@@ -124,7 +124,7 @@ export default {
         i.sortname = i.articleSort[0].sortname || "";
         this.list.push(i);
       });
-      console.log(this.list);
+      
       this.articleLoading = false;
     },
     handleSizeChange(val) {
@@ -145,7 +145,7 @@ export default {
   watch: {
     articleList: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatArticleList();
       },
       deep: true

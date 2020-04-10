@@ -109,7 +109,7 @@ export default {
     ]),
     showArticle() {
       this.dialoading = true;
-      console.log(this.articleForm);
+      
       this.dialogVisible = true;
       this.dialoading = false;
     },
@@ -127,7 +127,7 @@ export default {
               };
               AddArticle(this.articleForm)
                 .then(res => {
-                  console.log(res);
+                  
                   this.articleForm = {
                     nickname: "",
                     userid: "",
@@ -142,7 +142,7 @@ export default {
                   // });
                 })
                 .catch(err => {
-                  console.log(err);
+                  
                   this.$message.error("出现错误，请稍候再试");
                 });
             })
@@ -166,7 +166,7 @@ export default {
       }
     },
     changeEditor(e) {
-      console.log(e);
+      
       this.$confirm("已编辑内容将会删除，确认切换吗？")
         .then(_ => {
           this.editorType = e;
@@ -199,7 +199,7 @@ export default {
   watch: {
     danceSortList: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatSort();
       },
       deep: true

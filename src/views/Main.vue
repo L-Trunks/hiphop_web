@@ -63,7 +63,7 @@
                     :style="{ background: 'url('+item.imgurl+') no-repeat center center', backgroundSize: '100% 100%',width:'100%',height:'200px'}"
                   >
                     <div class="demo"></div>
-                    <span class="match_title">{{item.title}}</span>
+                    <div style="text-align:center"><span class="match_title">{{item.title}}</span></div>　
                   </div>
                 </el-card>
               </div>
@@ -213,14 +213,14 @@ export default {
       });
     },
     goListBySort(data) {
-      console.log(data);
+      
       this.$router.push({
         path: "/list_by_sort",
         query: { sortid: data._id, sortname: data.sortname }
       });
     },
     goRotationImgDetail(data) {
-      console.log(data);
+      
       this.$router.push({
         path: "/rotation_img_detail",
         query: { imgid: data._id }
@@ -230,14 +230,14 @@ export default {
     setImgList() {
       this.imgLoading = true;
       this.imgList = this.rotationImgList || [];
-      console.log(this.imgList);
+      
       this.imgLoading = false;
     },
     //设置分类
     setSortList() {
       this.sortLoading = true;
       this.sortList = this.danceSortList || [];
-      console.log(this.sortList);
+      
       this.sortLoading = true;
     },
     //格式化文章列表
@@ -256,7 +256,7 @@ export default {
         i.sortname = i.articleSort[0].sortname || "";
         this.articleList.push(i);
       });
-      console.log(this.articleList);
+      
       this.articleLoading = false;
     },
     //格式化视频列表
@@ -326,28 +326,25 @@ export default {
   watch: {
     rotationImgList: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.setImgList();
       },
       deep: true
     },
     danceSortList: {
       handler(newval, old) {
-        console.log(newval);
         this.setSortList();
       },
       deep: true
     },
     newArticleList: {
       handler(newval, old) {
-        console.log(newval);
         this.formatArticleList();
       },
       deep: true
     },
     newVideoList: {
       handler(newval, old) {
-        console.log(newval);
         this.formatVideoList();
       },
       deep: true
@@ -449,13 +446,9 @@ export default {
   transition: all 0.5s;
 }
 .match_title {
-  margin-top: 5px;
-  display: flex;
+  margin-top: 6px;
   padding: 2px;
   white-space: nowrap;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
 }

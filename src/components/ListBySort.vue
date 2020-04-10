@@ -89,12 +89,12 @@ export default {
       };
       GetArticleListByUser({ ...ArticlePageConfig, sortid: this.sortid })
         .then(res => {
-          console.log(res);
+          
           this.articleListBysort = res.data;
           this.formatArticleList();
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     getVideoList(PageConfig) {
@@ -104,12 +104,12 @@ export default {
       };
       GetVideoListByUser({ ...VideoPageConfig, sortid: this.sortid })
         .then(res => {
-          console.log(res);
+          
           this.videoListBysort = res.data;
           this.formatVideoList();
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     //格式化文章列表
@@ -127,7 +127,7 @@ export default {
         i.sortname = i.articleSort[0].sortname || "";
         this.articleList.push(i);
       });
-      console.log(this.articleList);
+      
     },
     //格式化视频列表
     formatVideoList() {
@@ -185,14 +185,14 @@ export default {
   watch: {
     articleListBysort: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatArticleList();
       },
       deep: true
     },
     videoListBysort: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatVideoList();
       },
       deep: true

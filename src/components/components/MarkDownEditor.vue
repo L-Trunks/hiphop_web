@@ -33,13 +33,17 @@ import axios from "axios";
 export default {
   data() {
     return {
-      content: this.content, // 文章内容
+      // content: this.content, // 文章内容
       html: "",
       fullscreenLoading: false,
       uploadType: ""
     };
   },
   props: {
+    content: {
+      type: String,
+      default: ""
+    }, // 文章内容
     uploadUrl: {
       type: String,
       default: ""
@@ -47,17 +51,17 @@ export default {
   },
   mounted() {
     //
-    console.log(this.$refs.md);
+    
   },
   methods: {
     // 图片上传之前调取的函数
     beforeUpload(file) {
-      console.log(file);
+      
     },
 
     // 图片上传成功回调   插入到编辑器中
     upScuccess(e, file, fileList) {
-      console.log(e, file, fileList);
+      
       this.fullscreenLoading = false;
       let vm = this;
       let url = "";
@@ -75,9 +79,9 @@ export default {
     },
     imgHandler(pos, file, e) {
       this.pos = pos;
-      console.log(pos, file, e);
+      
       let input = document.getElementsByTagName("input");
-      console.log(input);
+      
       let fileInput = document.getElementById("imgInput");
       fileInput.click(); // 加一个触发事件
       this.uploadType = "image";
@@ -94,11 +98,11 @@ export default {
         headers: { "Content-Type": "multipart/form-data" }
       })
         .then(res => {
-          console.log(res.data);
+          
           this.$refs.md.$img2Url(pos, res.data.data.url);
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     // 所有操作都会被解析重新渲染

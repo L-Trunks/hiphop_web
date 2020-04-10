@@ -37,6 +37,8 @@
 <script>
 import { Login, VerifyUserName, VerifyNickName } from "../api/user_api";
 import { mapState, mapMutations, mapActions } from "vuex";
+import { permissionMap } from "../utils/tools";
+
 export default {
   name: "Login",
   data() {
@@ -46,6 +48,7 @@ export default {
         username: "",
         password: ""
       },
+      permissionMap,
       loginRules: {
         username: [
           { required: true, message: "请输入手机号", trigger: "blur" },
@@ -55,9 +58,9 @@ export default {
       }
     };
   },
-  mounted(){
-    if(localStorage.getItem("accessToken")){
-      this.$router.push('/')
+  mounted() {
+    if (localStorage.getItem("accessToken")) {
+      this.$router.push("/");
     }
   },
   methods: {
@@ -72,19 +75,33 @@ export default {
         if (valid) {
           this.logining = true;
           this.loginForm.password = this.$md5(this.loginForm.password);
-          console.log(this.loginForm);
+          
           Login(this.loginForm)
             .then(res => {
-              console.log(res);
+              
               if (res.data && res.data.length > 0) {
-                this.changeToken(res.accessToken);
-                this.changeUserId(res.data[0]._id);
-                this.changeUserInfo(res.data[0]);
-                this.changeIsLogin(true);
-                this.$message.success("登录成功");
-                localStorage.setItem("accessToken", res.accessToken); //写入token
-                this.logining = false;
-                this.$router.push("/");
+                console.log(res.data[0].permission)
+                if (
+                  res.data[0].permission != "3" &&
+                  res.data[0].permission != "4" &&
+                  res.data[0].permission != "5"
+                ) {
+                  this.changeToken(res.accessToken);
+                  this.changeUserId(res.data[0]._id);
+                  this.changeUserInfo(res.data[0]);
+                  this.changeIsLogin(true);
+                  this.$message.success(
+                    `您好，${res.data[0].nickname}，权限：${
+                      permissionMap[res.data[0].permission]
+                    }`
+                  );
+                  localStorage.setItem("accessToken", res.accessToken); //写入token
+                  this.logining = false;
+                  this.$router.push("/");
+                } else {
+                  this.$router.push("/");
+                  this.$message.error("您已被封禁，恢复帐号请联系网站管理员");
+                }
               } else {
                 this.logining = false;
                 this.$message.error("登录失败，请检查输入格式或稍后再试");
@@ -92,7 +109,7 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err);
+              
               this.logining = false;
               this.$message.error("登录失败，请检查输入格式或稍后再试");
             });

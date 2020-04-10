@@ -274,7 +274,7 @@ export default {
     ...mapActions(["ArticleGetCollectList", "VideoGetCollectList"]),
     //获取收藏状态
     getCollectstatus() {
-      console.log(this.videoCollectList);
+      
       this.collectStatus = false;
       this.videoCollectList &&
         this.videoCollectList.data &&
@@ -309,7 +309,7 @@ export default {
                 }
               })
               .catch(err => {
-                console.log(err);
+                
                 this.$message.error("出现错误，请稍候再试");
               });
           })
@@ -323,7 +323,7 @@ export default {
           type: "1"
         })
           .then(res => {
-            console.log(res);
+            
             if (res && res.code == "200") {
               this.$message.success("收藏成功");
               this.collectStatus = true;
@@ -338,7 +338,7 @@ export default {
             }
           })
           .catch(err => {
-            console.log(err);
+            
             this.$message.error("出现错误，请稍候再试");
           });
       }
@@ -351,7 +351,7 @@ export default {
       }
     },
     addToList(data) {
-      console.log(data);
+      
       this.barrageList.push({
         id: ++this.currentId,
         avatar:
@@ -455,24 +455,24 @@ export default {
           ]
         },
         function(player) {
-          console.log("播放器创建好了。");
+          
         }
       );
       this.videoPlay = player;
     },
     //浏览量加一
     addVideoLook() {
-      console.log(this.videoInfo);
+      
       if (this.videoInfo.lookscount) {
         AddVideoLook({
           _id: this.videoid,
           lookscount: +this.videoInfo.lookscount
         })
           .then(res => {
-            console.log(res);
+            
           })
           .catch(err => {
-            console.log(err);
+            
           });
       }
     },
@@ -480,7 +480,7 @@ export default {
     getCounts() {
       GetCounts({ videoid: this.videoid })
         .then(res => {
-          console.log(res);
+          
           if (res) {
             this.getVideoInfo();
           } else {
@@ -488,7 +488,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     showAddComment(index) {
@@ -531,14 +531,14 @@ export default {
         type: "2"
       })
         .then(res => {
-          console.log(res);
+          
           this.commentInfo = "";
           this.getCommentsList();
           this.getCounts();
           this.addToList(res.data);
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     addSecondComment(data, index) {
@@ -558,13 +558,13 @@ export default {
         parentid: data._id
       })
         .then(res => {
-          console.log(res);
+          
           this.secondCommentInfo = "";
           this.firstCommentList[index].addShow = false;
           this.getCommentsList();
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     //获取评论列表
@@ -575,26 +575,26 @@ export default {
         ...PageConfig
       })
         .then(res => {
-          console.log(res);
+          
           if (res) {
             this.firstCommentList = (res && res.data.data) || [];
             SelectSecondComments({
               videoid: this.videoid
             })
               .then(res => {
-                console.log(res);
+                
                 this.secondCommentList = (res && res.data) || [];
                 this.formatComment();
               })
               .catch(err => {
-                console.log(err);
+                
               });
           } else {
             this.getCommentsList();
           }
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     //格式化评论列表
@@ -633,12 +633,12 @@ export default {
             });
         });
       this.loading = false;
-      console.log(this.firstCommentList);
+      
     },
     getVideoInfo(type) {
       GetVideoInfoById({ _id: this.videoid })
         .then(res => {
-          console.log(res);
+          
           if (res) {
             this.videoInfo = (res && res.data[0]) || {};
             this.videoInfo.createtime = formatDateTime(
@@ -657,11 +657,11 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     showDetail(data) {
-      console.log(data);
+      
       this.$router.push({
         path: "/article_detail",
         query: { articleid: data._id }
@@ -680,10 +680,10 @@ export default {
         i.sortname = i.articleSort[0].sortname || "";
         this.articleList.push(i);
       });
-      console.log(this.articleList);
+      
     },
     goListBySort(data) {
-      console.log(data);
+      
       this.$router.push({
         path: "/list_by_sort",
         query: {

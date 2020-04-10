@@ -18,7 +18,7 @@ const actions = {
     //改变用户信息actions
     GetUserInfoById(context, params) {
         GetUserInfoById(params).then(res => {
-            console.log(res)
+            
 
             context.commit('changeUserInfo', res.data[0]);
 
@@ -33,7 +33,7 @@ const actions = {
     GetAllDanceSortList(context, params) {
         GetAllDanceSortList(params).then(res => {
 
-            console.log(res)
+            
             context.commit('changeDanceSortList', res.data);
 
 
@@ -46,7 +46,7 @@ const actions = {
     GetAllArticleList(context, params) {
         GetAllArticleList(params).then(res => {
 
-            console.log(res)
+            
             context.commit('changeNewArticleList', res.data);
 
 
@@ -58,7 +58,7 @@ const actions = {
     //更新最新视频列表
     GetAllVideoList(context, params) {
         GetAllVideoList(params).then(res => {
-            console.log(res)
+            
             context.commit('changeNewVideoList', res.data);
         }).catch(err => {
             console.log(err)
@@ -68,7 +68,7 @@ const actions = {
     //更新消息列表
     GetMessageListByUser(context, params) {
         GetMessageListByUser(params).then(res => {
-            console.log(res)
+            
             context.commit('changeMessageList', res.data);
         }).catch(err => {
             console.log(err)
@@ -78,7 +78,7 @@ const actions = {
     //更新收藏视频列表
     VideoGetCollectList(context, params) {
         VideoGetCollectList(params).then(res => {
-            console.log(res)
+            
             context.commit('changeVideoCollectList', res.data);
         }).catch(err => {
             console.log(err)
@@ -88,7 +88,7 @@ const actions = {
     //更新收藏文章列表
     ArticleGetCollectList(context, params) {
         ArticleGetCollectList(params).then(res => {
-            console.log(res)
+            
             context.commit('changeArticleCollectList', res.data);
         }).catch(err => {
             console.log(err)
@@ -98,7 +98,7 @@ const actions = {
     //更新轮播图列表
     GetAllRotationImgList(context, params) {
         GetAllRotationImgList(params).then(res => {
-            console.log(res)
+            
             context.commit('changeRotationImgList', res.data);
         }).catch(err => {
             console.log(err)
@@ -108,7 +108,7 @@ const actions = {
     //更新公告列表
     GetAllAnnouncementList(context, params) {
         GetAllRotationImgList(params).then(res => {
-            console.log(res)
+            
             context.commit('changeAnnouncementList', res.data);
         }).catch(err => {
             console.log(err)
@@ -118,7 +118,7 @@ const actions = {
     //更新活动列表
     GetAllMatchList(context, params) {
         GetAllMatchList(params).then(res => {
-            console.log(res)
+            
             context.commit('changeMatchList', res.data);
         }).catch(err => {
             console.log(err)
@@ -128,7 +128,7 @@ const actions = {
     //更新用户文章列表
     GetArticleListByUser(context, params) {
         GetArticleListByUser(params).then(res => {
-            console.log(res)
+            
             context.commit('changeArticleList', res.data);
         }).catch(err => {
             console.log(err)
@@ -138,7 +138,7 @@ const actions = {
     //更新用户视频列表
     GetVideoListByUser(context, params) {
         GetVideoListByUser(params).then(res => {
-            console.log(res)
+            
             context.commit('changeVideoList', res.data);
         }).catch(err => {
             console.log(err)
@@ -148,7 +148,7 @@ const actions = {
     //更新用户关注列表
     GetNoticeListByUser(context, params) {
         GetNoticeListByUser(params).then(res => {
-            console.log(res)
+            
             context.commit('changeNoticeList', res.data);
         }).catch(err => {
             console.log(err)
@@ -158,7 +158,7 @@ const actions = {
     //更新房间列表
     GetAllRoomList(context, params) {
         GetAllRoomList(params).then(res => {
-            console.log(res)
+            
             context.commit('changeRoomList', res.data);
         }).catch(err => {
             console.log(err)

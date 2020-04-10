@@ -15,6 +15,8 @@ import AddVideo from '../components/person/AddVideo.vue';
 import MyVideo from '../components/person/MyVideo.vue';
 import AddActivity from '../components/person/AddActivity.vue';
 import MyActivity from '../components/person/MyActivity.vue';
+import AddRoom from '../components/person/AddRoom.vue';
+import MyRoom from '../components/person/MyRoom.vue';
 import CollectArticle from '../components/person/CollectArticle.vue';
 import CollectVideo from '../components/person/CollectVideo.vue';
 import UpdateUserInfo from '../components/person/UpdateUserInfo.vue';
@@ -24,9 +26,22 @@ import ActivityList from '../components/ActivityList.vue';
 import BaiduMap from '../components/BaiduMap.vue';
 import SearchResult from '../components/SearchResult.vue';
 import ChatRoom from '../components/ChatRoom.vue';
+import Management from '../components/Management.vue';
+import ActivityManagement from '../components/management/ActivityManagement.vue';
+import AnnounceManagement from '../components/management/AnnounceManagement.vue';
+import ArticleManagement from '../components/management/ArticleManagement.vue';
+import KeywordManagement from '../components/management/KeywordManagement.vue';
+import RoomManagement from '../components/management/RoomManagement.vue';
+import RotationManagement from '../components/management/RotationManagement.vue';
+import SortManagement from '../components/management/SortManagement.vue';
+import UserManagement from '../components/management/UserManagement.vue';
+import VideoManagement from '../components/management//VideoManagement.vue';
 
 Vue.use(VueRouter)
-
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 const routes = [
   {
     path: '/',
@@ -72,6 +87,14 @@ const routes = [
           {
             path: '/person/my_activity',
             component: MyActivity
+          },
+          {
+            path: '/person/add_room',
+            component: AddRoom
+          },
+          {
+            path: '/person/my_room',
+            component: MyRoom
           },
           {
             path: '/person/collect_article',
@@ -129,6 +152,48 @@ const routes = [
   {
     path: '/address',
     component: BaiduMap
+  },
+  {
+    path: "/management",
+    component: Management,
+    children: [
+      {
+        path: '/management/activity_management',
+        component: ActivityManagement,
+      },
+      {
+        path: '/management/announce_management',
+        component: AnnounceManagement,
+      },
+      {
+        path: '/management/article_management',
+        component: ArticleManagement,
+      },
+      {
+        path: '/management/keyword_management',
+        component: KeywordManagement,
+      },
+      {
+        path: '/management/room_management',
+        component: RoomManagement,
+      },
+      {
+        path: '/management/rotation_management',
+        component: RotationManagement,
+      },
+      {
+        path: '/management/sort_management',
+        component: SortManagement,
+      },
+      {
+        path: '/management/user_management',
+        component: UserManagement,
+      },
+      {
+        path: '/management/video_management',
+        component: VideoManagement,
+      },
+    ]
   }
 ]
 

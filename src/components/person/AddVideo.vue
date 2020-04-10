@@ -109,22 +109,22 @@ export default {
       "GetAllVideoList"
     ]),
     handleImgRemove(file, fileList) {
-      console.log(file, fileList);
+      
       this.videoForm.firsturl = "";
     },
     handleImgSuccess(file) {
-      console.log(file);
+      
       this.videoForm.firsturl = file.data.url;
     },
     handleImgExceed() {
       this.$message.error("只允许上传一张封面");
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      
       this.videoForm.videourl = "";
     },
     handleSuccess(file) {
-      console.log(file);
+      
       this.videoForm.videourl = file.data.url;
     },
     handleExceed() {
@@ -150,7 +150,7 @@ export default {
               };
               AddVideo(this.videoForm)
                 .then(res => {
-                  console.log(res);
+                  
                   this.videoForm = {
                     videourl: "",
                     userid: "",
@@ -162,7 +162,7 @@ export default {
                   this.$message.success("发布成功，快去看看吧");
                 })
                 .catch(err => {
-                  console.log(err);
+                  
                   this.$message.error("出现错误，请稍候再试");
                 });
             })
@@ -197,7 +197,7 @@ export default {
   watch: {
     danceSortList: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatSort();
       },
       deep: true

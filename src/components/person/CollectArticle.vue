@@ -111,7 +111,7 @@ export default {
               }
             })
             .catch(err => {
-              console.log(err);
+              
               this.$message.error("出现错误，请稍候再试");
             });
         })
@@ -142,7 +142,7 @@ export default {
         i.nickname = (i.collectUser[0] && i.collectUser[0].nickname) || "";
         this.list.push(i);
       });
-      console.log(this.list);
+      
       this.articleLoading = false;
     },
     handleSizeChange(val) {
@@ -163,7 +163,7 @@ export default {
   watch: {
     articleCollectList: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatArticleList();
       },
       deep: true

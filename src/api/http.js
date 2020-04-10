@@ -111,7 +111,7 @@ axios.interceptors.response.use(
  */
 export function get(url, params) {
     return new Promise((resolve, reject) => {
-        console.log(params)
+        // console.log(params)
         axios.get(url, {
             params: params
         }
@@ -130,7 +130,7 @@ export function get(url, params) {
  */
 export function post(url, params) {
     return new Promise((resolve, reject) => {
-        console.log(params)
+        // console.log(params)
         axios.post(url, QS.stringify(params))
             .then(res => {
                 resolve(res.data);

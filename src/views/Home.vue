@@ -77,7 +77,6 @@ export default {
       GetUserInfoByToken({ accessToken: accessToken })
         .then(res => {
           if (res && res.code === "200") {
-            console.log(res);
             this.changeIsLogin(true);
             this.changeUserId(res.data[0]._id);
             this.changeUserInfo(res.data[0]);
@@ -92,21 +91,30 @@ export default {
           this.$message.error("token失效，请重新登录");
         });
     }
-    this.GetAllDanceSortList();
+    this.GetAllDanceSortList({ status: "1" });
     this.GetAllVideoList(this.PageConfig);
     this.GetAllArticleList(this.PageConfig);
     this.GetAllRotationImgList({ status: "1" });
-    this.GetAllMatchList({})
-    this.GetAllRoomList({status:'0'})
-    this.GetAllAnnouncementList({status:'3'})
+    this.GetAllMatchList({});
+    this.GetAllRoomList({ status: "0" });
+    this.GetAllAnnouncementList({ status: "3" });
   },
   mounted() {
-        document
+    document
       .getElementsByTagName("body")[0]
       .setAttribute("style", "overflow: scroll !important");
-    if (this.userid==0) {
-      this.ArticleGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
-      this.VideoGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
+    if (this.userid) {
+      this.GetMessageListByUser({ userid: this.userid });
+      this.ArticleGetCollectList({
+        ...this.PageConfig,
+        userid: this.userid,
+        type: "1"
+      });
+      this.VideoGetCollectList({
+        ...this.PageConfig,
+        userid: this.userid,
+        type: "1"
+      });
     }
   },
   methods: {
@@ -117,12 +125,13 @@ export default {
       "changeIsLogin",
       "changeUserId",
       "changeUserInfo",
-      'changeKeyword'
+      "changeKeyword"
     ]),
     ...mapActions([
-      'GetAllRoomList',
-      'GetAllMatchList',
-      'GetAllAnnouncementList',
+      "GetMessageListByUser",
+      "GetAllRoomList",
+      "GetAllMatchList",
+      "GetAllAnnouncementList",
       "ArticleGetCollectList",
       "VideoGetCollectList",
       "GetAllDanceSortList",
@@ -131,25 +140,57 @@ export default {
       "GetAllRotationImgList"
     ]),
     getSearch() {
-      this.changeKeyword(this.searchWord)
-      this.$router.push({path:"/search",query:{keyword:this.searchWord}});
+      this.changeKeyword(this.searchWord);
+      this.$router.push({
+        path: "/search",
+        query: { keyword: this.searchWord }
+      });
     },
     logout() {
-      localStorage.setItem("accessToken", "");
-      this.changeIsLogin(false);
-      this.changeUserInfo({});
-      this.changeUserId("");
-      this.$router.push("/");
+      this.$confirm("确定退出登录吗？")
+        .then(_ => {
+          localStorage.setItem("accessToken", "");
+          this.changeIsLogin(false);
+          this.changeUserInfo({});
+          this.changeUserId("");
+          this.$router.push("/");
+        })
+        .catch(_ => {});
     }
   },
-    watch: {
+  watch: {
     userid: {
       handler(newval, old) {
-            this.ArticleGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
-      this.VideoGetCollectList({...this.PageConfig, userid: this.userid, type: "1" });
+        if (newval) {
+          this.GetMessageListByUser({ userid: newval });
+          this.ArticleGetCollectList({
+            ...this.PageConfig,
+            userid: newval,
+            type: "1"
+          });
+          this.VideoGetCollectList({
+            ...this.PageConfig,
+            userid: newval,
+            type: "1"
+          });
+        }
       },
       deep: true
-    },},
+    },
+    userInfo: {
+      handler(newval, old) {
+        if (newval && newval.permission === "4") {
+          this.$message.error("您已被封禁，恢复帐号请联系网站管理员");
+          localStorage.setItem("accessToken", "");
+          this.changeIsLogin(false);
+          this.changeUserInfo({});
+          this.changeUserId("");
+          this.$router.push("/");
+        }
+      },
+      deep: true
+    }
+  },
   computed: {
     ...mapState({
       isLogin: state => state.isLogin,
@@ -162,6 +203,9 @@ export default {
       videoResult: state => state.videoResult,
       articleResult: state => state.articleResult,
       roomList: state => state.roomList,
+      rotationImgList: state => state.rotationImgList,
+      matchList: state => state.matchList,
+      announcementList: state => state.announcementList
     })
   },
   components: {
@@ -170,7 +214,7 @@ export default {
 };
 </script>
 <style scoped>
-.box{
+.box {
   background: url("../../public/images/1.svg") no-repeat 120% 60%;
 }
 .top_search {

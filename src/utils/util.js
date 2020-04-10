@@ -82,7 +82,7 @@ export const setImgSize = (htmlstr, w, h) => {
 //         '"></video></div><div> </div>';
 //     let box = document.getElementById("box_video");
 //     box.innerHTML = $video;
-//     console.log(box);
+//     
 //     let videoElement = document.getElementById("video");
 //     videoElement.addEventListener("canplay", function (_event) {
 //         let canvas = document.createElement("canvas");
@@ -91,7 +91,7 @@ export const setImgSize = (htmlstr, w, h) => {
 //         canvas
 //             .getContext("2d")
 //             .drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-//         console.log(canvas.toDataURL("image/png")); //第一帧图片url
+//          //第一帧图片url
 //         return canvas.toDataURL('image/png')
 //     });
 // }

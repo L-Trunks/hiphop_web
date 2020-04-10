@@ -87,12 +87,12 @@ export default {
   methods: {
     // 图片上传之前调取的函数
     beforeUpload(file) {
-      console.log(file);
+      
     },
 
     // 图片上传成功回调   插入到编辑器中
     upScuccess(e, file, fileList) {
-      console.log(e, file, fileList);
+      
       this.fullscreenLoading = false;
       let vm = this;
       let url = "";

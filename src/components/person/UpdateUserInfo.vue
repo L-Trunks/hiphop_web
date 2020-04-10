@@ -68,7 +68,7 @@ export default {
   created() {},
   mounted() {
     this.userInfo ? (this.userForm = this.userInfo) : "";
-    console.log(this.userForm.nickname);
+    
   },
   methods: {
     ...mapActions(["GetUserInfoById"]),
@@ -89,7 +89,7 @@ export default {
       }
       VerifyNickName({ nickname: this.userForm.nickname })
         .then(res => {
-          console.log(res);
+          
           if (
             res &&
             res.code === "1008" &&
@@ -101,7 +101,7 @@ export default {
           } else {
             UpdateUserInfo({ ...this.userForm, _id: this.userid })
               .then(res => {
-                console.log(res);
+                
                 if (res && res.code == "200") {
                   this.loading = false;
                   this.fileList = [];
@@ -115,7 +115,7 @@ export default {
                 }
               })
               .catch(err => {
-                console.log(err);
+                
                 this.loading = false;
                 this.$message.error("出现错误，请稍候重试");
               });
@@ -123,7 +123,7 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          console.log(err);
+          
           this.$message.error("昵称验证失败，请稍候重试");
         });
     },
@@ -132,13 +132,13 @@ export default {
     },
     handleRemove(file, fileList) {
       this.loading = true;
-      console.log(file, fileList);
+      
       this.userForm.imgurl =
         this.userInfo.imgurl || "http://localhost:8888/public/images/user1.jpg";
       this.loading = false;
     },
     handleSuccess(file) {
-      console.log(file);
+      
       this.userForm.imgurl = file.data.url;
       this.loading = false;
     },
@@ -156,7 +156,7 @@ export default {
   watch: {
     userInfo: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.userForm = newval;
       },
       deep: true

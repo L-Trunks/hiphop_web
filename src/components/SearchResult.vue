@@ -127,21 +127,21 @@ export default {
       } else {
         GetVideoResultList({ keyword: this.searchWord, ...PageConfig })
           .then(res => {
-            console.log(res);
+            
             this.changeVideoResult(res.data || []);
             this.loading = false;
           })
           .catch(err => {
-            console.log(err);
+            
           });
         GetArticleResultList({ keyword: this.searchWord, ...PageConfig })
           .then(res => {
             this.changeArticleResult(res.data || []);
             this.loading = false;
-            console.log(res);
+            
           })
           .catch(err => {
-            console.log(err);
+            
           });
       }
       this.$router.push("/search");
@@ -160,13 +160,13 @@ export default {
         i.createtime = formatDateTime(dateTimeStamp(i.createtime));
         this.articleList.push(i);
       });
-      console.log(this.articleList);
+      
       this.articleLoading = false;
     },
     //格式化视频列表
     formatVideoList() {
       this.videoLoading = true;
-      console.log(this.videoResult);
+      
       let list = (this.videoResult && this.videoResult.data) || [];
       this.VideoPageConfig.total =
         (this.videoResult && this.videoResult.total) || 0;
@@ -189,10 +189,10 @@ export default {
         .then(res => {
           this.changeArticleResult(res.data || []);
           this.formatArticleList();
-          console.log(res);
+          
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     handleCurrentChange(val) {
@@ -203,11 +203,11 @@ export default {
       GetArticleResultList({ keyword: this.searchWord, ...PageConfig })
         .then(res => {
           this.changeArticleResult(res.data || []);
-          console.log(res);
+          
           this.formatArticleList();
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     handleVideoSizeChange(val) {
@@ -217,12 +217,12 @@ export default {
       };
       GetVideoResultList({ keyword: this.searchWord, ...PageConfig })
         .then(res => {
-          console.log(res);
+          
           this.changeVideoResult(res.data || []);
           this, formatVideoList();
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     handleVideoCurrentChange(val) {
@@ -232,12 +232,12 @@ export default {
       };
       GetVideoResultList({ keyword: this.searchWord, ...PageConfig })
         .then(res => {
-          console.log(res);
+          
           this.changeVideoResult(res.data || []);
           this, formatVideoList();
         })
         .catch(err => {
-          console.log(err);
+          
         });
     }
   },
@@ -262,28 +262,28 @@ export default {
   watch: {
     keyword: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.searchWord = newval;
       },
       deep: true
     },
     searchWord: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.getSearch();
       },
       deep: true
     },
     articleResult: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatArticleList();
       },
       deep: true
     },
     videoResult: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatVideoList();
       },
       deep: true

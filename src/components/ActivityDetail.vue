@@ -153,7 +153,7 @@ export default {
     getArticleInfo() {
       GetMarchInfoByInfo({ _id: this.matchid })
         .then(res => {
-          console.log(res);
+          
           if (res) {
             this.articleInfo = (res && res.data[0]) || {};
             this.articleInfo.createtime = formatDateTime(
@@ -169,11 +169,11 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     showDetail(data) {
-      console.log(data);
+      
       // this.matchid = data._id;
       this.$router.push({
         path: "/article_detail",
@@ -193,10 +193,10 @@ export default {
         i.sortname = i.articleSort[0].sortname || "";
         this.articleList.push(i);
       });
-      console.log(this.articleList);
+      
     },
     goListBySort(data) {
-      console.log(data);
+      
     }
   },
   computed: {

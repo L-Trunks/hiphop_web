@@ -4,41 +4,41 @@ const url = '/api/keywords'
 /**
  * 添加关键字
  */
-export const add_keyword = (params) => {
+export const AddKeyword = (params) => {
     return post(url+'/add_keyword',params)
 }
 
 /**
  * 删除关键字
  */
-export const delete_keyword = (params) => {
+export const DeleteKeyword = (params) => {
     return get(url+'/delete_keyword',params)
 }
 
 /**
  * 编辑关键字
  */
-export const update_keyword = (params) => {
+export const UpdateKeyword = (params) => {
     return post(url+'/update_keyword',params)
 }
 
 /**
  * 获取所有关键字
  */
-export const get_all_keywords = (params) => {
+export const GetAllKeywords = (params) => {
     return get(url+'/get_all_keywords',params)
 }
 
 /**
  * 视频关键字监控
  */
-export const video_keywords = (params) => {
+export const VideoKeywords = (params) => {
     return post(url+'/video_keywords',params)
 }
 
 /**
  * 文章关键字监控
  */
-export const article_keywords = (params) => {
+export const ArticleKeywords = (params) => {
     return post(url+'/article_keywords',params)
 }

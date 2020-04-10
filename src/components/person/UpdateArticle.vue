@@ -112,7 +112,7 @@ export default {
     getArticleInfo(type) {
       GetArticleInfoById({ _id: this.articleid })
         .then(res => {
-          console.log(res);
+          
           if (res) {
             this.articleInfo = (res && res.data[0]) || {};
             this.articleInfo.createtime = formatDateTime(
@@ -126,12 +126,12 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
+          
         });
     },
     showArticle() {
       this.dialoading = true;
-      console.log(this.articleForm);
+      
       this.dialogVisible = true;
       this.dialoading = false;
     },
@@ -149,7 +149,7 @@ export default {
               };
               AddArticle(this.articleForm)
                 .then(res => {
-                  console.log(res);
+                  
                   this.articleForm = {};
                   this.$message.error("修改成功，快去看看吧");
                   this.$router.push({
@@ -158,7 +158,7 @@ export default {
                   });
                 })
                 .catch(err => {
-                  console.log(err);
+                  
                   this.$message.error("出现错误，请稍候再试");
                 });
             })
@@ -182,7 +182,7 @@ export default {
       }
     },
     changeEditor(e) {
-      console.log(e);
+      
       this.$confirm("已编辑内容将会删除，确认切换吗？")
         .then(_ => {
           this.editorType = e;
@@ -221,7 +221,7 @@ export default {
     },
     danceSortList: {
       handler(newval, old) {
-        console.log(newval);
+        
         this.formatSort();
       },
       deep: true

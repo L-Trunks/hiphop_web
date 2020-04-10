@@ -115,7 +115,7 @@ export default {
 
       GetRotationImgListByInfo({ _id: this.imgid })
         .then(res => {
-          console.log(res);
+          
           if (res) {
             this.imgInfo = (res && res.data[0]) || {};
             this.imgInfo.createtime = formatDateTime(
@@ -133,11 +133,11 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          console.log(err);
+          
         });
     },
     showDetail(data) {
-      console.log(data);
+      
       this.$router.push({
         path: "/article_detail",
         query: { articleid: data._id }
@@ -156,7 +156,7 @@ export default {
         i.sortname = i.articleSort[0].sortname || "";
         this.articleList.push(i);
       });
-      console.log(this.articleList);
+      
     }
   },
   computed: {
