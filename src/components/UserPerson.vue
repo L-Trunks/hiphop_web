@@ -26,7 +26,7 @@
                 <el-button size="small">关注</el-button>
               </el-badge>
               <el-badge :value="messageList &&messageList.length || 0" class="item">
-                <el-button size="small">通知</el-button>
+                <el-button @click="showMessage" size="small">通知</el-button>
               </el-badge>
               <el-button
                 style="margin-left:15px;"
@@ -110,7 +110,7 @@
                 <el-menu-item index="4-2">我的活动&比赛</el-menu-item>
               </router-link>
             </el-submenu>
-            <el-submenu v-if="userInfo && userInfo.permission =='２'" index="5">
+            <el-submenu v-if="userInfo && userInfo.permission =='2'" index="5">
               <template slot="title">
                 <i class="el-icon-s-comment"></i>
                 <span>我的聊天室</span>
@@ -139,6 +139,34 @@
         </el-col>
       </div>
     </el-row>
+    <el-dialog
+      title="消息通知"
+      :loading="messagedialoading"
+      :visible.sync="messagedialogVisible"
+      width="60%"
+    >
+      <div style="padding:20px">
+        <el-tabs
+          :tab-position="'left'"
+          v-model="selectMessage"
+          type="card"
+          closable
+          @tab-remove="removeTab"
+        >
+          <el-tab-pane
+            :key="index"
+            v-for="(item, index) in messageList"
+            :label="item.fromUser[0].nickname||''"
+            :name="item._id"
+          >
+            <div style="padding:20px;background:#eee;color:black">
+              {{item.message}}
+              <p style="text-align:right">{{item.createtime}}</p>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </el-dialog>
     <el-dialog title="申请认证" :loading="dialoading" :visible.sync="dialogVisible" width="60%">
       <div style="padding:20px">
         <el-form
@@ -173,12 +201,17 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import { UpdateUserInfo } from "../api/user_api";
 import { permissionMap } from "../utils/tools";
+import { formatDateTime } from "../utils/util";
+import { DeleteMessage } from "../api/message_api";
 export default {
   name: "UserPerson",
   data() {
     return {
       dialoading: false,
       dialogVisible: false,
+      messagedialoading: false,
+      messagedialogVisible: false,
+      selectMessage: "",
       updateUserForm: {
         phone: "",
         introduce: ""
@@ -213,20 +246,48 @@ export default {
       "changeUserInfo"
     ]),
     ...mapActions([
+      "GetMessageListByUser",
       "GetUserInfoById",
       "GetAllDanceSortList",
       "GetAllArticleList",
       "GetAllVideoList",
       "GetAllRotationImgList"
     ]),
+    showMessage() {
+      console.log(this.messagedialogVisible);
+      this.messagedialogVisible = true;
+    },
+    removeTab(targetName) {
+      this.messagedialoading = true;
+      console.log(targetName);
+      this.$confirm("确定删除该通知吗？")
+        .then(_ => {
+          DeleteMessage({ id: targetName })
+            .then(res => {
+              console.log(res);
+              this.$message.success("删除成功");
+              this.messagedialoading = false;
+              this.GetMessageListByUser({ userid: this.userid });
+            })
+            .catch(err => {
+              this.messagedialoading = false;
+              console.log(err);
+              this.$message.error("删除失败");
+            });
+        })
+        .catch(_ => {
+          this.messagedialoading = false;
+          return;
+        });
+    },
     //更新房间
     submit(formname) {
       this.$refs[formname].validate(valid => {
         if (valid) {
-          if (this.updateUserForm.imgurl == "") {
-            this.$message.error("请上传房间海报");
-            return;
-          }
+          // if (this.updateUserForm.imgurl == "") {
+          //   this.$message.error("请上传房间海报");
+          //   return;
+          // }
           this.$confirm("确定提交吗？")
             .then(_ => {
               this.updateUserForm = {
@@ -234,10 +295,9 @@ export default {
                 permission: "6",
                 _id: this.userid
               };
-              
+
               UpdateUserInfo(this.updateUserForm)
                 .then(res => {
-                  
                   this.updateUserForm = {
                     phone: "",
                     introduce: ""
@@ -249,7 +309,6 @@ export default {
                   this.GetUserInfoById({ _id: this.userid });
                 })
                 .catch(err => {
-                  
                   this.$message.error("出现错误，请稍候再试");
                   this.dialogVisible = false;
                 });
@@ -264,7 +323,7 @@ export default {
     },
     verifyUser() {
       this.dialoading = true;
-      
+
       this.dialogVisible = true;
       this.dialoading = false;
     },
@@ -299,7 +358,6 @@ export default {
   watch: {
     userInfo: {
       handler(newval, old) {
-        
         if (newval && newval.permission === "4") {
           this.$message.error("您已被封禁，恢复帐号请联系网站管理员");
           localStorage.setItem("accessToken", "");
@@ -309,6 +367,14 @@ export default {
           this.$router.push("/");
         }
         this.userData = newval;
+      },
+      deep: true
+    },
+    messageList: {
+      handler(newval, old) {
+        newval.map(i => {
+          i.createtime = formatDateTime(i.createtime);
+        });
       },
       deep: true
     }

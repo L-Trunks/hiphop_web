@@ -12,7 +12,7 @@ module.exports = {
     // open: true, //配置自动启动浏览器 
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8888/api', //对应自己的接口
+        target: 'http://localhost:8888/api', //对应自己的接口
         changeOrigin: true,
         ws: true,
         pathRewrite: {
@@ -20,7 +20,7 @@ module.exports = {
         }
       },
       '/chatapi': {
-        target: 'http://127.0.0.1:7788', //对应自己的接口
+        target: 'http://localhost:7788', //对应自己的接口
         changeOrigin: true,
         ws: true,
         pathRewrite: {

@@ -298,7 +298,7 @@ export default {
               this.editForm = {
                 ...this.editForm,
                 userid: this.userInfo._id || "",
-                status: "4"
+                status: "0"
               };
               AddRotationImg(this.editForm)
                 .then(res => {

@@ -29,7 +29,7 @@
         </div>
         <div class="article_info">
           <h2>活动海报</h2>
-          <img width="600px" height="400px" :src="articleInfo.imgurl" alt="暂无图片" />
+          <img width="650px" height="800px" :src="articleInfo.imgurl" alt="暂无图片" />
         </div>
         <div class="article_bottom">
           <div>

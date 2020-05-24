@@ -48,6 +48,7 @@ export default {
           { required: true, message: "请输入活动&比赛标题", trigger: "blur" }
         ]
       },
+      addressUrl:'http://localhost:8080/#/address?address=',
       updateForm: {},
       options: {
         // table样式参数
@@ -106,7 +107,7 @@ export default {
           isShow: true,
           formatter: function(row) {
             return `<a
-                href="${row.address}"
+                href="http://localhost:8080/#/address?address=${row.address}"
                 target="_blank"
                 rel="noopener noreferrer"
               >

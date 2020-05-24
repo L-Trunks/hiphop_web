@@ -199,6 +199,17 @@ export default {
             method: (index, row) => {
               this.verify(index, row);
             }
+          },
+          {
+            id: "4",
+            label: "设为管理员",
+            show: true, //是否显示按钮
+            className: "searchAll", //样式类名
+            type: "primary",
+            disabled: false, //是否禁用按钮 默认是danger的禁用样式
+            method: (index, row) => {
+              this.setManagement(index, row);
+            }
           }
         ]
       } // 列操作按钮
@@ -224,13 +235,11 @@ export default {
               };
               AddMessage(this.sendForm)
                 .then(res => {
-                  
                   this.sendForm = {};
                   this.dialogVisible = false;
                   this.$message.success("发送成功");
                 })
                 .catch(err => {
-                  
                   this.$message.error("出现错误，请稍候再试");
                 });
             })
@@ -241,7 +250,6 @@ export default {
       });
     },
     handleUnBan(index, row) {
-      
       if (row.permission !== "4") {
         this.$message.error("该用户未被封禁");
         return;
@@ -250,7 +258,6 @@ export default {
         .then(_ => {
           UnBanUser({ _id: row._id, permission: "0" })
             .then(res => {
-              
               this.getUserList({
                 page_size: 8,
                 page_no: 0,
@@ -259,14 +266,12 @@ export default {
               this.$message.success("操作成功");
             })
             .catch(err => {
-              
               this.$message.error("操作失败");
             });
         })
         .catch(_ => {});
     },
     verify(index, row) {
-      
       if (row.permission !== "6") {
         this.$message.error("该用户未申请认证");
         return;
@@ -275,7 +280,6 @@ export default {
         .then(_ => {
           BanUser({ _id: row._id, permission: "2" })
             .then(res => {
-              
               this.getUserList({
                 page_size: 8,
                 page_no: 0,
@@ -284,14 +288,34 @@ export default {
               this.$message.success("操作成功");
             })
             .catch(err => {
-              
+              this.$message.error("操作失败");
+            });
+        })
+        .catch(_ => {});
+    },
+    setManagement(index, row) {
+      if (row.permission == "1") {
+        this.$message.error("该用户已是管理员");
+        return;
+      }
+      this.$confirm("确定设置该用户为管理员？")
+        .then(_ => {
+          BanUser({ _id: row._id, permission: "1" })
+            .then(res => {
+              this.getUserList({
+                page_size: 8,
+                page_no: 0,
+                total: 0
+              });
+              this.$message.success("操作成功");
+            })
+            .catch(err => {
               this.$message.error("操作失败");
             });
         })
         .catch(_ => {});
     },
     handleBan(index, row) {
-      
       if (row.permission == "4") {
         this.$message.error("该用户已被封禁");
         return;
@@ -300,7 +324,6 @@ export default {
         .then(_ => {
           BanUser({ _id: row._id, permission: "4" })
             .then(res => {
-              
               this.getUserList({
                 page_size: 8,
                 page_no: 0,
@@ -309,14 +332,12 @@ export default {
               this.$message.success("操作成功");
             })
             .catch(err => {
-              
               this.$message.error("操作失败");
             });
         })
         .catch(_ => {});
     },
     sendMessage(index, row) {
-      
       this.dialoading = true;
       this.sendForm = {
         nickname: row.nickname || "",
@@ -330,7 +351,6 @@ export default {
       this.options.loading = true;
       GetAllUserList(page)
         .then(res => {
-          
           if (res && res.data) {
             this.PageConfig.total = res.data.total || 0;
             this.list = res.data.data || [];
@@ -340,7 +360,6 @@ export default {
           }
         })
         .catch(err => {
-          
           this.$message.error("出现错误，请稍候重试");
           this.options.loading = false;
         });

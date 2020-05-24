@@ -33,17 +33,17 @@ import axios from "axios";
 export default {
   data() {
     return {
-      // content: this.content, // 文章内容
+      content: this.content, // 文章内容
       html: "",
       fullscreenLoading: false,
       uploadType: ""
     };
   },
   props: {
-    content: {
-      type: String,
-      default: ""
-    }, // 文章内容
+    // content: {
+    //   type: String,
+    //   default: ""
+    // }, // 文章内容
     uploadUrl: {
       type: String,
       default: ""
@@ -92,7 +92,7 @@ export default {
       let formdata = new FormData();
       formdata.append("file", $file);
       axios({
-        url: "/upload/image",
+        url: "/api/upload/image",
         method: "post",
         data: formdata,
         headers: { "Content-Type": "multipart/form-data" }

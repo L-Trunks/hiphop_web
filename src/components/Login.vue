@@ -58,8 +58,9 @@ export default {
       }
     };
   },
-  mounted() {
-    if (localStorage.getItem("accessToken")) {
+  created() {
+    console.log(this.isLogin);
+    if (this.isLogin) {
       this.$router.push("/");
     }
   },
@@ -75,12 +76,11 @@ export default {
         if (valid) {
           this.logining = true;
           this.loginForm.password = this.$md5(this.loginForm.password);
-          
+
           Login(this.loginForm)
             .then(res => {
-              
               if (res.data && res.data.length > 0) {
-                console.log(res.data[0].permission)
+                console.log(res.data[0].permission);
                 if (
                   res.data[0].permission != "3" &&
                   res.data[0].permission != "4" &&
@@ -109,7 +109,6 @@ export default {
               }
             })
             .catch(err => {
-              
               this.logining = false;
               this.$message.error("登录失败，请检查输入格式或稍后再试");
             });
@@ -118,6 +117,13 @@ export default {
         }
       });
     }
+  },
+  computed: {
+    ...mapState({
+      isLogin: state => state.isLogin,
+      userid: state => state.userid,
+      userInfo: state => state.userInfo
+    })
   },
   components: {}
 };

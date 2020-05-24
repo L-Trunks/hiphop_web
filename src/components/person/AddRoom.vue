@@ -39,6 +39,7 @@
 
 <script>
 import { AddRoom } from "../../api/room_api";
+import { GetAllRoomList, UpdateRoom } from "../../api/room_api";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { setImgSize, dateTimeStamp } from "../../utils/util";
 export default {
@@ -71,22 +72,17 @@ export default {
     };
   },
   mounted() {
-        if (
-      this.userInfo &&
-      this.userInfo.permission !== "2" 
-    ) {
-      this.$message.error('您无权访问此网页')
-      this.$router.push('/')
+    if (this.userInfo && this.userInfo.permission !== "2") {
+      this.$message.error("您无权访问此网页");
+      this.$router.push("/");
     }
   },
   methods: {
     ...mapActions(["GetAllRotationImgList", "GetAllRoomList"]),
     handleImgRemove(file, fileList) {
-      
       this.roomForm.imgurl = "";
     },
     handleImgSuccess(file) {
-      
       this.roomForm.imgurl = file.data.url;
     },
     handleImgExceed() {
@@ -94,52 +90,59 @@ export default {
     },
     showRoom() {
       this.dialoading = true;
-      
+
       this.dialogVisible = true;
       this.dialoading = false;
     },
     //提交房间
     submit(formname) {
-      this.$refs[formname].validate(valid => {
-        if (valid) {
-          if (this.roomForm.imgurl == "") {
-            this.$message.error("请上传房间海报");
+      GetAllRoomList({ userid: this.userid })
+        .then(res => {
+          if (res && res.data && res.data.length >= 1) {
+            this.$message.error("一个用户仅允许创建一个聊天室");
             return;
-          }
-          this.$confirm("确定提交吗？")
-            .then(_ => {
-              this.roomForm = {
-                ...this.roomForm,
-                userid: this.userid
-              };
-              
-              AddRoom(this.roomForm)
-                .then(res => {
-                  
-                  this.roomForm = {
-                    title: "",
-                    userid: "",
-                    introduce: "",
-                    status: "",
-                    imgurl: ""
-                  };
-                  this.fileList = [];
-                  this.content = "";
-                  this.$message.success("新建成功，快去看看吧");
-                  this.GetAllRoomList({});
-                })
-                .catch(err => {
-                  
-                  this.$message.error("出现错误，请稍候再试");
-                });
-            })
-            .catch(_ => {
-              return;
+          } else {
+            this.$refs[formname].validate(valid => {
+              if (valid) {
+                if (this.roomForm.imgurl == "") {
+                  this.$message.error("请上传房间海报");
+                  return;
+                }
+                this.$confirm("确定提交吗？")
+                  .then(_ => {
+                    this.roomForm = {
+                      ...this.roomForm,
+                      userid: this.userid
+                    };
+
+                    AddRoom(this.roomForm)
+                      .then(res => {
+                        this.roomForm = {
+                          title: "",
+                          userid: "",
+                          introduce: "",
+                          status: "",
+                          imgurl: ""
+                        };
+                        this.fileList = [];
+                        this.content = "";
+                        this.$message.success("新建成功，快去看看吧");
+                        this.GetAllRoomList({});
+                      })
+                      .catch(err => {
+                        this.$message.error("出现错误，请稍候再试");
+                      });
+                  })
+                  .catch(_ => {
+                    return;
+                  });
+              } else {
+                return false;
+              }
             });
-        } else {
-          return false;
-        }
-      });
+          }
+        })
+        .catch(err => {});
     }
   },
   computed: {

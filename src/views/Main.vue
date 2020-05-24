@@ -56,6 +56,7 @@
                   class="activity_card"
                   v-for="(item, index) in matchList"
                   :key="index"
+                  v-if="index<=7"
                   :body-style="{ padding: '0px' }"
                 >
                   <div
@@ -295,14 +296,14 @@ export default {
         page_size: val,
         page_no: this.VideoPageConfig.page_no - 1
       };
-      this.GetAllArticleList(PageConfig);
+      this.GetAllVideoList(PageConfig);
     },
     handleVideoCurrentChange(val) {
       let PageConfig = {
         page_size: this.VideoPageConfig.page_size,
         page_no: val - 1
       };
-      this.GetAllArticleList(PageConfig);
+      this.GetAllVideoList(PageConfig);
     }
   },
   components: { ContentList },
