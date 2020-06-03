@@ -70,9 +70,9 @@
             <div class="comment_box" v-for="(item,index) in firstCommentList">
               <div class="user_comment">
                 <el-avatar
-                  :src="item.fromUser[0].imgurl || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
+                  :src="item.fromUser &&item.fromUser[0] && item.fromUser[0].imgurl || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
                 ></el-avatar>
-                {{item.fromUser[0].nickname}} &nbsp;
+                {{item.fromUser &&item.fromUser[0] &&item.fromUser[0].nickname||''}} &nbsp;
                 <span
                   style="font-size:12px;#999;margin-left:10px"
                 >{{item.createtime}}</span>
@@ -103,10 +103,10 @@
               >
                 <div class="user_comment">
                   <el-avatar
-                    :src="itemchild.fromUser[0].imgurl || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
+                    :src="item.fromUser &&item.fromUser[0] &&itemchild.fromUser[0].imgurl || 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'"
                   ></el-avatar>
                   <span style="font-size:14px">
-                    {{itemchild.fromUser[0].nickname}} &nbsp;
+                    {{itemchild.fromUser &&itemchild.fromUser[0] &&itemchild.fromUser[0].nickname}} &nbsp;
                     <span
                       style="font-size:12px;#999;margin-left:10px"
                     >{{itemchild.createtime}}</span>

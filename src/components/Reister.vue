@@ -189,7 +189,7 @@ export default {
                               .then(res => {
                                 if (res.data && res.data.length > 0) {
                                   this.changeToken(res.accessToken);
-                                  this.changeUserId(res.data[0].id);
+                                  this.changeUserId(res.data[0]._id);
                                   this.changeUserInfo(res.data[0]);
                                   this.changeIsLogin(true);
                                   this.$message.success("登录成功");

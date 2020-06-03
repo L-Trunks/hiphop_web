@@ -27,14 +27,19 @@ function endLoading() {    //使用Element loading-close 方法
 //请求拦截
 axios.interceptors.request.use(
     config => {
-        startLoading();
-        // 每次发送请求之前判断vuex中是否存在token        
-        // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
-        // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断 
-        console.log(axios.defaults.headers)
-        const token = store.state.token;
-        token && (config.headers.accessToken = token);
-        return config;
+        if (config.url !== '/chatapi/get_chat_log') {
+            startLoading();
+            // 每次发送请求之前判断vuex中是否存在token        
+            // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
+            // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断 
+            // console.log(config)
+            const token = store.state.token;
+            token && (config.headers.accessToken = token);
+            return config;
+        } else {
+            return config
+        }
+
     },
     error => {
         return Promise.error(error);
@@ -57,7 +62,7 @@ axios.interceptors.response.use(
         endLoading();
         if (error.response.status) {
             console.log(response)
-            switch (error.response.code) {              
+            switch (error.response.code) {
                 case 1002:
                     Vue.$message.error('请登录')
                     router.replace({

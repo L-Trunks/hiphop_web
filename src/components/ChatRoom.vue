@@ -99,7 +99,7 @@ export default {
     let oldTime = 1504509461000;
     let old = new Date(oldTime);
     let test = Date.parse(new Date()); // Date.parse(datestring) 是一个静态函数，可以直接调用
-    
+    this.getChatLog()
     setInterval(() => {
       this.getChatLog();
     }, 5000);
@@ -139,7 +139,7 @@ export default {
       };
       // 3.on-line在线 room发送消息
       this.socket.removeAllListeners();
-      // 延时，解决中文乱码问题，刚connect;emit chat时候又不会乱码啊
+     
       let that = this;
       setTimeout(function() {
         that.socket.emit("joinToRoom", chat);
@@ -160,15 +160,18 @@ export default {
             "http://localhost:8888/public/images/noimage.jpg",
           chatType: "chat" // tips
         };
-        
+        console.log(chat,this.chatLog)
         // 发送
         this.socket.emit("emitChat", chat);
+        console.log(chat,this.chatLog)
         // 发送成功之后
         this.editText = "";
         this.$refs.r_editText.focus();
         // 发送前更新本地chatLog
         chat.chatTime = formatDateTime(chat.chatTime);
-        this.chatLog.push(chat);
+        // this.chatLog.push(chat);
+        this.getChatLog()
+        console.log(chat,this.chatLog)
         // document.querySelector(".chat-log").scrollTo(0, 99999999999);
       } else {
         this.editText = "";
@@ -219,7 +222,7 @@ export default {
     };
     // 3.on-line在线 room发送消息
     this.socket.removeAllListeners();
-    // 延时，解决中文乱码问题，刚connect;emit chat时候又不会乱码啊
+   
     let that = this;
     document
       .getElementsByTagName("body")[0]

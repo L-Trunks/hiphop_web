@@ -171,7 +171,7 @@ export default {
         .then(_ => {
           DeleteArticle({ _id: row._id })
             .then(res => {
-              
+              let page = {...this.PageConfig,page_no:this.PageConfig.page_no-1}
               this.getArticleList(this.PageConfig);
               this.$message.success("删除成功");
             })
